@@ -42,5 +42,4 @@ This repository contains the Lattica Fully Homomorphic Encryption (FHE) core log
 3. **Python** (3.12+) for Python build (plus headers, e.g., `python3-dev`)
 4. **Node.js** for WASM testing or `npm install` steps, if needed
 
-
 ---
