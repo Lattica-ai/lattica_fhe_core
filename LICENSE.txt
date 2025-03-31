@@ -1,0 +1,20 @@
+VIEW_SOURCE_ LICENSE
+Effective: April 2025
+
+THE VIEW-ONLY SOURCE CODE REFERENCED HEREIN (THE "CODE") IS NOT AN OPEN-SOURCE CODE;  AND THE LICENSE GRANTED UNDER THE TERMS AND CONDITION SET HEREIN (THE "LICENSE"), IS INTENDED FOR THE SOLE PURPOSE OF VIEWING THE CODE, WITHOUT ANY POSSIBILITY OF CONTRIBUTION, ATTRIBUTION, OR ANY OTHER TYPE OF USE, EXCEPT FOR VIEWING. WITHOUT LIMITING THE GENERALITY OF THE FOREGOING, BY USING THE CODE, THE USER AGREES THAT THE FOLLOWING REGULATIONS AND RESTRICTIONS SHALL APPLY:
+
+- In this License, (a) the "Code" shall also mean: source code, binary forms, and any other recognized terminology associated with code. (b) "User" or "Viewer" shall mean: any individual who, directly or indirectly, personally or through a representative acting on their behalf, including any non-human entity of any kind, seeks to utilize or is utilizing the code. (c) the "Use" shall mean the use by the User/ Viewer.
+
+- The License does not grant any right of distribution or redistribution.
+
+- There will be no use in Code other than viewing, with or without modification.
+
+- All rights to the Code are fully owned by LatticaAI Inc, without any limitation of any kind, and this License does not, in any way, restrict or condition the aforementioned rights.
+
+- The Code is subject to the restrictions set out in the documentation.
+
+- No promotion of products derived from this License without specific prior written permission from LatticaAI Inc.
+
+- NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY’S PATENT RIGHTS ARE GRANTED BY THIS LICENSE. THIS LICENSE IS PROVIDED BY LATTICAAI INC “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL LATTICAAI INC OR ANY OF ITS AFFILIATE AND/OR RELATED ENTITIES BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS CODE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+- LatticaAI Inc. shall support the User (provided they act in accordance with the terms of this License), conversely, the User undertakes to collaborate with LatticaAI Inc. regarding its rights of the Code. In this context it is agreed that the User irrevocably waives any claim to intellectual property rights of any kind in the code. All declarations, representations and commitments set forth in this License shall be deemed to have been made prior to the commencement of Use.
