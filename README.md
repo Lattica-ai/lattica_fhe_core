@@ -28,7 +28,7 @@ This repository contains the Lattica Fully Homomorphic Encryption (FHE) core cli
 
 ---
 
-© Lattica AI - See [LICENSE.txt](LICENSE) for license details.
+© Lattica AI - See [LICENSE](LICENSE.txt) for license details.
 
 ---
 
