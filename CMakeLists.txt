@@ -16,27 +16,13 @@ if(DEEP_BINDING)
     add_definitions(-DDEEP_BINDING)
 endif()
 
-# Torch Lattica is in the sibling "lattice-toolkit/torch_lattica"
-set(LATTICE_TOOLKIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../lattice-toolkit")
-set(TORCH_LATTICA_PATH  "${LATTICE_TOOLKIT_DIR}/torch_lattica")
-
 # Gather serialization sources
 file(GLOB_RECURSE serfiles_SRC "src/serialization/src/*.pb.cc")
 
-# Torch Lattica "register" files
-set(registerfiles_SRC
-    ${TORCH_LATTICA_PATH}/src/ATen/RegisterSchema.cpp
-    ${TORCH_LATTICA_PATH}/src/ATen/RegisterBackendSelect.cpp
-    ${TORCH_LATTICA_PATH}/src/ATen/core/BackendSelectFallbackKernel.cpp
-    ${TORCH_LATTICA_PATH}/src/ATen/core/VariableFallbackKernel.cpp
-    ${TORCH_LATTICA_PATH}/src/ATen/RegisterCPU.cpp
-    ${TORCH_LATTICA_PATH}/src/ATen/RegisterCompositeExplicitAutograd.cpp
-    ${TORCH_LATTICA_PATH}/src/ATen/RegisterCompositeImplicitAutograd.cpp
-)
+set(LATTICE_TOOLKIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../lattice-toolkit")
 
 set(SRC_DIR "${CMAKE_SOURCE_DIR}/src")
 set(COMMON_INCLUDE_DIRS
-    ${TORCH_LATTICA_PATH}/src/
     ${SRC_DIR}/
     ${SRC_DIR}/binding/common/include
     ${SRC_DIR}/binding/python/include
@@ -64,9 +50,9 @@ file(GLOB_RECURSE BINDING_COMMON_SRC "${SRC_DIR}/binding/common/src/*.cpp")
 file(GLOB_RECURSE NUM_SRC "${SRC_DIR}/num.cpp")
 
 # Combine all source files into one variable
-set(ALL_SOURCES 
-    ${TENSOR_ENGINE_SRC} 
-    ${SERIALIZATION_SRC} 
+set(ALL_SOURCES
+    ${TENSOR_ENGINE_SRC}
+    ${SERIALIZATION_SRC}
     ${SLOT_PERMUTATIONS_SRC}
     ${CONTEXT_UTILS_SRC}
     ${ENCRYPTION_SCHEMES_SRC}
@@ -82,7 +68,25 @@ set(ALL_SOURCES
 # ------------------------------------------------------------------------------
 if(PYTHON_ENABLED)
     set(PYTHON_MIN_VERSION 3.12)
-    
+
+    # Torch paths from Python virtualenv
+    set(LIBTORCH_LIB_DIR "${LATTICE_TOOLKIT_DIR}/.venv/lib/python3.12/site-packages/torch/lib")
+    set(LIBTORCH_SO_FILES
+        ${LIBTORCH_LIB_DIR}/libtorch.so
+        ${LIBTORCH_LIB_DIR}/libtorch_cpu.so
+        ${LIBTORCH_LIB_DIR}/libtorch_cuda.so
+        ${LIBTORCH_LIB_DIR}/libtorch_cuda_linalg.so
+        ${LIBTORCH_LIB_DIR}/libtorch_global_deps.so
+        ${LIBTORCH_LIB_DIR}/libtorch_python.so
+        ${LIBTORCH_LIB_DIR}/libc10.so
+        ${LIBTORCH_LIB_DIR}/libc10_cuda.so
+        ${LIBTORCH_LIB_DIR}/libshm.so
+        ${LIBTORCH_LIB_DIR}/libcaffe2_nvrtc.so
+    )
+
+    set(LIBTORCH_INCLUDE_DIR "${LATTICE_TOOLKIT_DIR}/.venv/lib/python3.12/site-packages/torch/include")
+    set(LIBTORCH_INCLUDE_TORCH_DIR "${LIBTORCH_INCLUDE_DIR}/torch")
+
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,--copy-dt-needed-entries -Wall -fPIC")
 
     set(LIBSODIUM_NATIVE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libsodium/native-build")
@@ -110,22 +114,25 @@ if(PYTHON_ENABLED)
         ${ALL_SOURCES}
         ${BINDING_PYTHON_SRC}
         ${serfiles_SRC}
-        ${registerfiles_SRC}
     )
 
     target_include_directories(${TARGET_NAME} PRIVATE
         ${Python3_INCLUDE_DIRS}
         ${LIBSODIUM_NATIVE_INCLUDE_DIR}
+        ${LIBTORCH_INCLUDE_DIR}
+        ${LIBTORCH_INCLUDE_TORCH_DIR}
         ${COMMON_INCLUDE_DIRS}
     )
 
+
     target_link_directories(${TARGET_NAME}
         PRIVATE
-        ${TORCH_LATTICA_PATH}/build_python/
+        ${LIBTORCH_LIB_DIR}
         "/usr/local/lib"
         "/usr/local/lib64"
         ${LIBSODIUM_NATIVE_LIBRARY}
     )
+
 
     set(ABSL_COMPILED_PATH "${PROTOBUF_PATH}/build_python/third_party/abseil-cpp")
     set(protobuf_libs
@@ -166,7 +173,7 @@ if(PYTHON_ENABLED)
         PRIVATE
         "-Wl,--start-group"
         pybind11::module
-        TorchLattica
+        ${LIBTORCH_SO_FILES}
         cpuinfo.a
         ${protobuf_libs}
         ${LIBSODIUM_NATIVE_LIBRARY}
@@ -179,19 +186,34 @@ endif()
 # WASM BUILD
 # ------------------------------------------------------------------------------
 if(WASM_ENABLED)
+    # Torch Lattica is in the sibling "lattice-toolkit/torch_lattica"
+    set(TORCH_LATTICA_PATH  "${LATTICE_TOOLKIT_DIR}/torch_lattica")
+
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -sDISABLE_EXCEPTION_CATCHING=0 -pthread -flto")
+    set(COMMON_INCLUDE_DIRS ${COMMON_INCLUDE_DIRS} ${TORCH_LATTICA_PATH}/src/)
     set( BASE_LIB ${WASM_BASE_DIR} )
     link_directories(${BASE_LIB}/lib)
 
     set(LIBSODIUM_WASM_DIR "${CMAKE_CURRENT_SOURCE_DIR}/libsodium/wasm-build")
     set(LIBSODIUM_WASM_INCLUDE_DIR "${LIBSODIUM_WASM_DIR}/include")
     set(LIBSODIUM_WASM_LIB_DIR "${LIBSODIUM_WASM_DIR}/lib")
-    set(LIBSODIUM_WASM_LIBRARY "${LIBSODIUM_WASM_LIB_DIR}/libsodium.a") 
+    set(LIBSODIUM_WASM_LIBRARY "${LIBSODIUM_WASM_LIB_DIR}/libsodium.a")
 
     message(STATUS "Using Libsodium (WASM) include: ${LIBSODIUM_WASM_INCLUDE_DIR}")
     message(STATUS "Using Libsodium (WASM) library: ${LIBSODIUM_WASM_LIBRARY}")
 
     file(GLOB_RECURSE BINDING_WASM_SRC "${SRC_DIR}/binding/wasm/src/*.cpp")
+
+    # Torch Lattica "register" files
+    set(registerfiles_SRC
+        ${TORCH_LATTICA_PATH}/src/ATen/RegisterSchema.cpp
+        ${TORCH_LATTICA_PATH}/src/ATen/RegisterBackendSelect.cpp
+        ${TORCH_LATTICA_PATH}/src/ATen/core/BackendSelectFallbackKernel.cpp
+        ${TORCH_LATTICA_PATH}/src/ATen/core/VariableFallbackKernel.cpp
+        ${TORCH_LATTICA_PATH}/src/ATen/RegisterCPU.cpp
+        ${TORCH_LATTICA_PATH}/src/ATen/RegisterCompositeExplicitAutograd.cpp
+        ${TORCH_LATTICA_PATH}/src/ATen/RegisterCompositeImplicitAutograd.cpp
+    )
 
     add_executable(
         ${TARGET_NAME}
@@ -201,9 +223,9 @@ if(WASM_ENABLED)
         ${serfiles_SRC}
         ${registerfiles_SRC}
     )
-    
+
     target_link_directories(${TARGET_NAME} PRIVATE "${TORCH_LATTICA_PATH}/build_wasm/")
-    
+
     target_include_directories(${TARGET_NAME} PRIVATE
         ${BASE_LIB}/include
         ${LIBSODIUM_WASM_INCLUDE_DIR}

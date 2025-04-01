@@ -27,16 +27,16 @@ State::State(string& proto_str) : State() {
     init(proto);
 }
 
-TTensor& State::q_list() { 
-    return mod_state.q_list(); 
+TTensor& State::q_list() {
+    return mod_state.q_list();
 }
 
-int State::len_q_list() { 
-    return mod_state.len_q_list(); 
+int State::len_q_list() {
+    return mod_state.len_q_list();
 }
 
-TTensor& State::active_rows() { 
-    return mod_state.active_rows; 
+TTensor& State::active_rows() {
+    return mod_state.active_rows;
 }
 
 // GParams implementation
@@ -68,7 +68,7 @@ TTensor& GParams::get_g_vec(State state) {
 }
 
 // Params implementation
-Params::Params() : g_params(GParams()), 
+Params::Params() : g_params(GParams()),
                   pt_g_params(GParams()),
                   crt_params(crt_params_and_state::CrtParams()),
                   pt_pack_params(crt_params_and_state::CrtParams()),
@@ -90,7 +90,7 @@ void Params::init(lattica_proto::Params proto) {
     pt_pack_state.init(proto.pt_pack_state());
     n_range = serialization_utils::deser_tensor(proto.n_range());
     perms_base_crt.init(proto.perms_base_crt());
-    xi = c10_lattica_nspace::complex<double>(proto.xi().real(), proto.xi().imag());
+    xi = c10::complex<double>(proto.xi().real(), proto.xi().imag());
 }
 
 lattica_proto::Params Params::to_proto(optional<lattica_proto::Params*> t_proto) {
@@ -128,12 +128,12 @@ Params::Params(string& proto_str) : Params() {
     init(proto);
 }
 
-TTensor& Params::p() { 
-    return pt_mod_state.q_list(); 
+TTensor& Params::p() {
+    return pt_mod_state.q_list();
 }
 
-int Params::p_np() { 
-    return p()[0].item<SINGLE_PRECISION>(); 
+int Params::p_np() {
+    return p()[0].item<SINGLE_PRECISION>();
 }
 
 } // namespace global_params_and_state

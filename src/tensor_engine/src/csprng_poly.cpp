@@ -20,7 +20,7 @@ void generate_random_int64_tensor(TTensor& tensor, int64_t q) {
     init_sodium();
     auto total_elems = tensor.numel();
     auto flattened_tensor = tensor.view(-1);
-    auto accessor = flattened_tensor.packed_accessor32<int64_t, 1, at_lattica_nspace::DefaultPtrTraits>();
+    auto accessor = flattened_tensor.packed_accessor32<int64_t, 1, at::DefaultPtrTraits>();
 
     double expansion_factor = 1.1; // 10% expansion
     size_t collected = 0;
@@ -57,7 +57,7 @@ void generate_random_int32_tensor(TTensor& tensor, int32_t low, int32_t high) {
     init_sodium();
     auto num_elements = tensor.numel();
     auto flattened_tensor = tensor.view(-1);
-    auto accessor = flattened_tensor.packed_accessor32<int64_t, 1, at_lattica_nspace::DefaultPtrTraits>();
+    auto accessor = flattened_tensor.packed_accessor32<int64_t, 1, at::DefaultPtrTraits>();
 
     uint32_t upper_bound = static_cast<uint32_t>(high - low);
 
@@ -87,7 +87,7 @@ void generate_random_normal_tensor(TTensor& tensor, float mean, float std) {
     init_sodium();
     int64_t total_elems = tensor.numel();
     auto flattened_tensor = tensor.view(-1);
-    auto accessor = flattened_tensor.packed_accessor32<float, 1, at_lattica_nspace::DefaultPtrTraits>();
+    auto accessor = flattened_tensor.packed_accessor32<float, 1, at::DefaultPtrTraits>();
 
     // Each iteration of Box–Muller produces two normally distributed numbers.
     int64_t pairs = (total_elems + 1) / 2;

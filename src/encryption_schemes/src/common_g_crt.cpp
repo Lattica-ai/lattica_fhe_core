@@ -1,5 +1,5 @@
+#include <ATen/ATen.h>
 #include "common_g_crt.h"
-#include "ATen/ATen.h"
 
 namespace encryption_schemes {
 
@@ -7,7 +7,7 @@ std::tuple<TTensor, TTensor> _EncryptionScheme_G_CRT::sample_randomness(
         context::Context& context,
         pt_shape::PtShape& pt_shape,
         optional<global_params_and_state::State> t_state) {
-    
+
     global_params_and_state::State state = t_state ? t_state.value() : context.init_state;
     std::vector<int64_t> additional_dims = {state.len_q_list(), context.params.pt_g_params.g_exp};
     TTensor a, e;
@@ -46,7 +46,7 @@ TTensor _EncryptionScheme_G_CRT::_enc(
 Ciphertext _EncryptionScheme_G_CRT::apply_mod_switch_down_drop(
         Ciphertext& ct,
         Slice relative_new_indices) {
-    
+
     return ct.get_item({"...", relative_new_indices}
             ).get_item({"...", relative_new_indices, Slice(), Slice(), Slice()});
 }

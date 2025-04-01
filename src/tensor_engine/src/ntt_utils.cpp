@@ -6,7 +6,7 @@ namespace ntt_utils {
         DOUBLE_PRECISION temp = (DOUBLE_PRECISION)a * (DOUBLE_PRECISION)b;
         return (SINGLE_PRECISION)(temp % p);
     }
-    
+
     SINGLE_PRECISION _modsum(SINGLE_PRECISION a, SINGLE_PRECISION b, SINGLE_PRECISION p) {
         SINGLE_PRECISION res = a + b;
         return res < p ? res : res - p;
@@ -19,9 +19,9 @@ namespace ntt_utils {
 
     void computation_over_poly_ntt(NttArgs& nttArgs) {
 
-        auto result_accessor = nttArgs.result.packed_accessor32<int64_t,4,at_lattica_nspace::DefaultPtrTraits>();
-        auto q_list_accessor = nttArgs.q_list.packed_accessor32<int64_t,1,at_lattica_nspace::DefaultPtrTraits>();
-        auto s_accessor = nttArgs.active_psi_arr.packed_accessor32<int64_t,2,at_lattica_nspace::DefaultPtrTraits>();
+        auto result_accessor = nttArgs.result.packed_accessor32<int64_t,4,at::DefaultPtrTraits>();
+        auto q_list_accessor = nttArgs.q_list.packed_accessor32<int64_t,1,at::DefaultPtrTraits>();
+        auto s_accessor = nttArgs.active_psi_arr.packed_accessor32<int64_t,2,at::DefaultPtrTraits>();
 
         for (int64_t x = nttArgs.start; x < nttArgs.end; x++) {
 
@@ -97,9 +97,9 @@ namespace ntt_utils {
 
     void computation_over_poly_intt(NttArgs& nttArgs) {
 
-        auto result_accessor = nttArgs.result.packed_accessor32<int64_t,4,at_lattica_nspace::DefaultPtrTraits>();
-        auto q_list_accessor = nttArgs.q_list.packed_accessor32<int64_t,1,at_lattica_nspace::DefaultPtrTraits>();
-        auto s_accessor = nttArgs.active_psi_arr.packed_accessor32<int64_t,2,at_lattica_nspace::DefaultPtrTraits>();
+        auto result_accessor = nttArgs.result.packed_accessor32<int64_t,4,at::DefaultPtrTraits>();
+        auto q_list_accessor = nttArgs.q_list.packed_accessor32<int64_t,1,at::DefaultPtrTraits>();
+        auto s_accessor = nttArgs.active_psi_arr.packed_accessor32<int64_t,2,at::DefaultPtrTraits>();
 
         for (int64_t x = nttArgs.start; x < nttArgs.end; x++) {
 
@@ -110,7 +110,7 @@ namespace ntt_utils {
             int64_t t = 1;
             int64_t m = nttArgs.n/2;
             while (m >= 1) {
-    
+
                 for (int64_t tid = 0; tid < nttArgs.n/2; tid++) {
                     int64_t i_tid = tid / t;
                     int64_t idx_u = i_tid * t + tid;

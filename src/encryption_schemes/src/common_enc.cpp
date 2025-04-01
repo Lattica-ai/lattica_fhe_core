@@ -5,8 +5,8 @@ namespace encryption_schemes {
 // Ciphertext implementation
 Ciphertext::Ciphertext(
     TTensor& t_a,
-    TTensor& t_b, 
-    pt_shape::PtShape& t_pt_shape, 
+    TTensor& t_b,
+    pt_shape::PtShape& t_pt_shape,
     global_params_and_state::State& t_state
 ) : a(t_a), b(t_b), pt_shape(t_pt_shape), state(t_state) {}
 
@@ -62,7 +62,7 @@ Ciphertext Ciphertext::make_copy(
     return Ciphertext(t_a_, t_b_, t_pt_shape_, t_state_);
 }
 
-Ciphertext Ciphertext::get_item(at_lattica_nspace::ArrayRef<at_lattica_nspace::indexing::TensorIndex> indices) {
+Ciphertext Ciphertext::get_item(at::ArrayRef<at::indexing::TensorIndex> indices) {
     TTensor a_slice = a.index(indices);
     TTensor b_slice = b.index(indices);
     return make_copy(a_slice, b_slice);

@@ -1,8 +1,8 @@
 #include "tensor_engine.h"
 #include "csprng_poly.h"
 
-using namespace c10_lattica_nspace;
-using namespace at_lattica_nspace::indexing;
+using namespace c10;
+using namespace at::indexing;
 
 namespace t_eng {
 
@@ -50,16 +50,16 @@ TTensor take_along_axis(TTensor a, TTensor idxs, int axis) {
     return a.take_along_dim(idxs, axis);
 }
 
-TTensor empty(std::vector<int64_t> sizes, optional<at_lattica_nspace::ScalarType> dtype) {
-    return at_lattica_nspace::empty(sizes, dtype.value());
+TTensor empty(std::vector<int64_t> sizes, optional<at::ScalarType> dtype) {
+    return at::empty(sizes, dtype.value());
 }
 
-TTensor eye(int n, optional<at_lattica_nspace::ScalarType> dtype) {
-    return at_lattica_nspace::eye(n, dtype.value());
+TTensor eye(int n, optional<at::ScalarType> dtype) {
+    return at::eye(n, dtype.value());
 }
 
 TTensor vander(TTensor a, int n, bool increasing) {
-    return at_lattica_nspace::vander(a, n, increasing);
+    return at::vander(a, n, increasing);
 }
 
 TTensor round(TTensor a) {
@@ -69,55 +69,55 @@ TTensor round(TTensor a) {
 TTensor pad_single_axis(TTensor a, int pad, int axis) {
     std::vector<int64_t> padding(-axis*2 - 1, 0);
     padding.push_back(pad);
-    return at_lattica_nspace::constant_pad_nd(a, padding, 0);
+    return at::constant_pad_nd(a, padding, 0);
 }
 
 TTensor rfft(TTensor a, int n ,int axis) {
     a = a.to(T_ENG_FLOAT_TYPE);
-    return at_lattica_nspace::fft_rfft(a, n, axis).contiguous();
+    return at::fft_rfft(a, n, axis).contiguous();
 }
 
 TTensor irfft(TTensor a, int n, int axis) {
-    return at_lattica_nspace::fft_irfft(a, n, axis).contiguous();
+    return at::fft_irfft(a, n, axis).contiguous();
 }
 
 TTensor ifft(TTensor a, int n, int axis) {
-    return at_lattica_nspace::fft_ifft(a, n, axis).contiguous();
+    return at::fft_ifft(a, n, axis).contiguous();
 }
 
 TTensor arange(int64_t start, int64_t end, int64_t step) {
-    return at_lattica_nspace::arange(start, end, step);
+    return at::arange(start, end, step);
 }
 
 TTensor pow(TTensor a, TTensor b) {
-    return at_lattica_nspace::pow(a, b);
+    return at::pow(a, b);
 }
 
-TTensor pow(c10_lattica_nspace::Scalar a, TTensor b) {
-    return at_lattica_nspace::pow(a, b);
+TTensor pow(c10::Scalar a, TTensor b) {
+    return at::pow(a, b);
 }
 
-TTensor pow(TTensor a, c10_lattica_nspace::Scalar b) {
-    return at_lattica_nspace::pow(a, b);
+TTensor pow(TTensor a, c10::Scalar b) {
+    return at::pow(a, b);
 }
 
 TTensor flip(TTensor a, std::vector<int64_t> dims) {
-    return at_lattica_nspace::flip(a, dims);
+    return at::flip(a, dims);
 }
 
 TTensor cat(std::vector<TTensor> tensors, int axis) {
-    return at_lattica_nspace::cat(tensors, axis);
+    return at::cat(tensors, axis);
 }
 
 TTensor sum(TTensor a, int axis) {
-    return at_lattica_nspace::sum(a, axis);
+    return at::sum(a, axis);
 }
 
 TTensor real(TTensor a) {
-    return at_lattica_nspace::real(a);
+    return at::real(a);
 }
 
-void generate_random_integers(TTensor& tensor, int64_t low, int64_t high, at_lattica_nspace::ScalarType dtype) {
+void generate_random_integers(TTensor& tensor, int64_t low, int64_t high, at::ScalarType dtype) {
     if (high <= static_cast<int64_t>(std::numeric_limits<int32_t>::max())) {
         switch (dtype) {
             case T_ENG_INT_TYPE:

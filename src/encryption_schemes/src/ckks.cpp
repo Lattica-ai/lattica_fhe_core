@@ -1,4 +1,4 @@
-#include "ATen/ATen.h"
+#include <ATen/ATen.h>
 #include "ckks.h"
 #include "num.h"
 
@@ -111,15 +111,15 @@ TTensor _CKKS::pack_pt(
     pt = t_eng::ifft(pt, context.params.n, -1);
 
     // Compute the phase: exp(i*pi*j/n).
-    c10_lattica_nspace::complex<double> I(0.0f, 1.0f);
-    c10_lattica_nspace::complex<double>  factor_val = I * static_cast<double>(M_PI) / static_cast<double>(context.params.n);
+    c10::complex<double> I(0.0f, 1.0f);
+    c10::complex<double>  factor_val = I * static_cast<double>(M_PI) / static_cast<double>(context.params.n);
 
     TTensor factor = t_eng::empty({1}, T_ENG_COMPLEX_TYPE);
     factor.index_put_({0}, factor_val);
 
     TTensor j = t_eng::arange(0, context.params.n, 1);
     TTensor j_tensor_complex = j.to(T_ENG_COMPLEX_TYPE);
-    TTensor pt_packed = at_lattica_nspace::exp(factor * j_tensor_complex);
+    TTensor pt_packed = at::exp(factor * j_tensor_complex);
 
     pt_packed = pt * pt_packed;
 

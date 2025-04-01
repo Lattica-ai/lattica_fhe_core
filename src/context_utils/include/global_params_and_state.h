@@ -16,7 +16,7 @@ public:
     void init(lattica_proto::State proto);
     lattica_proto::State to_proto(optional<lattica_proto::State*> t_proto = nullopt);
     State(string& proto_str);
-    
+
     TTensor& q_list();
     int len_q_list();
     TTensor& active_rows();
@@ -32,7 +32,7 @@ public:
     void init(lattica_proto::GParams proto);
     lattica_proto::GParams to_proto(optional<lattica_proto::GParams*> t_proto = nullopt);
     GParams(string& proto_str);
-    
+
     TTensor& get_g_vec(State state);
 };
 
@@ -51,13 +51,13 @@ public:
     crt_params_and_state::CrtState pt_pack_state;
     TTensor n_range;
     perm_utils::CrtPermutations perms_base_crt;
-    c10_lattica_nspace::complex<double> xi;
+    c10::complex<double> xi;
 
     Params();
     void init(lattica_proto::Params proto);
     lattica_proto::Params to_proto(optional<lattica_proto::Params*> t_proto = nullopt);
     Params(string& proto_str);
-    
+
     TTensor& p();
     int p_np();
 };

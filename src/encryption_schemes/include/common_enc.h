@@ -16,8 +16,8 @@ public:
 
     Ciphertext(
         TTensor& t_a,
-        TTensor& t_b, 
-        pt_shape::PtShape& t_pt_shape, 
+        TTensor& t_b,
+        pt_shape::PtShape& t_pt_shape,
         global_params_and_state::State& t_state
     );
 
@@ -27,24 +27,24 @@ public:
     );
 
     Ciphertext();
-    
+
     virtual void init(lattica_proto::Ciphertext proto);
-    
+
     lattica_proto::Ciphertext to_proto(optional<lattica_proto::Ciphertext*> t_proto = nullopt);
-    
+
     Ciphertext(string& proto_str);
-    
+
     virtual Ciphertext make_copy(
         optional<TTensor> t_a = {},
         optional<TTensor> t_b = {},
         optional<pt_shape::PtShape> t_pt_shape = {},
         optional<global_params_and_state::State> t_state = {}
     );
-    
-    virtual Ciphertext get_item(at_lattica_nspace::ArrayRef<at_lattica_nspace::indexing::TensorIndex> indices);
-    
+
+    virtual Ciphertext get_item(at::ArrayRef<at::indexing::TensorIndex> indices);
+
     virtual void pack_for_transmission();
-    
+
     virtual void unpack_from_transmission(global_params_and_state::State& t_state);
 };
 

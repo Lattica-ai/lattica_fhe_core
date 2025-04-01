@@ -1,5 +1,8 @@
 build_python/
 build_python_deep/
 build_wasm/
+libsodium/wasm-build/
+libsodium/native-build/
+libsodium/libsodium-*/autom4te.cache/
 example_wasm/cpp_sdk.wasm
 example_wasm/cpp_sdk.js
