@@ -1,6 +1,6 @@
 # Lattica FHE Core
 
-This repository contains the Lattica Fully Homomorphic Encryption (FHE) core logic.
+This repository contains the Lattica Fully Homomorphic Encryption (FHE) core client logic -- key generation, encryption and decryption.
 
 ---
 
@@ -13,7 +13,7 @@ This repository contains the Lattica Fully Homomorphic Encryption (FHE) core log
 ## Repository Structure
 
 > ```
-> lattica_fhe_core_private/
+> lattica_fhe_core/
 > ├── src/
 > │   ├── serialization/
 > │   │   └── ... (generated *.pb.cc / *.pb.h from .proto)
