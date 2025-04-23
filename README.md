@@ -6,25 +6,8 @@ This repository contains the Lattica Fully Homomorphic Encryption (FHE) core cli
 
 ## Overview
 
-- **Core Lattica FHE** functionality in C++
+- **Lattica Fully Homomorphic Encryption (FHE)** encryption/decryption logic.
 - **Python extension** (via pybind11) for integration into Python workflows
-- **WASM build** for browser or Node.js environments (using Emscripten)
-
-## Repository Structure
-
-> ```
-> lattica_fhe_core/
-> ├── src/
-> │   ├── serialization/
-> │   │   └── ... (generated *.pb.cc / *.pb.h from .proto)
-> │   ├── toolkit_python.cpp
-> │   └── toolkit_wasm.cpp
-> ```
-
-- **`src/`**: Core C++ source code:
-  - `toolkit_python.cpp` (Pybind module entry point)
-  - `toolkit_wasm.cpp` (WASM entry point)
-  - `serialization/` (generated C++ from `.proto` files, plus any additional logic)
 
 ---
 
