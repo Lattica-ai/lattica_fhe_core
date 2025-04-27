@@ -17,8 +17,6 @@ Ciphertext Ciphertext::init_from_ct_and_state(
     return Ciphertext(ct.a, ct.b, ct.pt_shape, t_state);
 }
 
-Ciphertext::Ciphertext() {}
-
 void Ciphertext::init(lattica_proto::Ciphertext proto) {
     a = serialization_utils::deser_tensor(proto.a());
     b = serialization_utils::deser_tensor(proto.b());
@@ -42,7 +40,8 @@ lattica_proto::Ciphertext Ciphertext::to_proto(optional<lattica_proto::Ciphertex
     return *proto;
 }
 
-Ciphertext::Ciphertext(string& proto_str) : Ciphertext() {
+Ciphertext::Ciphertext(const string& proto_str)
+    : Ciphertext() {
     GOOGLE_PROTOBUF_VERIFY_VERSION;
     lattica_proto::Ciphertext proto;
     proto.ParseFromString(proto_str);
@@ -76,6 +75,38 @@ void Ciphertext::unpack_from_transmission(global_params_and_state::State& t_stat
     state = t_state;
 }
 
+TTensor& Ciphertext::get_a() {
+    return a;
+}
+
+TTensor& Ciphertext::get_b() {
+    return b;
+}
+
+void Ciphertext::set_a(const TTensor& t_a) {
+    a = t_a;
+}
+
+void Ciphertext::set_b(const TTensor& t_b) {
+    b = t_b;
+}
+
+pt_shape::PtShape& Ciphertext::get_pt_shape() {
+    return pt_shape;
+}
+
+global_params_and_state::State& Ciphertext::get_state() {
+    return state.value();
+}
+
+bool Ciphertext::has_state() const {
+    return state.has_value();
+}
+
+void Ciphertext::set_state(const global_params_and_state::State& t_state) {
+    state = t_state;
+}
+
 // AbstractEncryptionScheme implementation
 std::tuple<TTensor, TTensor> AbstractEncryptionScheme::_sample_randomness(
     context::Context& context,
@@ -85,15 +116,14 @@ std::tuple<TTensor, TTensor> AbstractEncryptionScheme::_sample_randomness(
     int n_axis
 ) {
     std::cout << "AbstractEncryptionScheme::_sample_randomness" << std::endl;
-    auto params = context.params;
 
-    std::vector<int64_t> rand_dims(pt_shape.internal_shape);
+    std::vector<int64_t> rand_dims(pt_shape.get_internal_shape());
     rand_dims.insert(rand_dims.end(), additional_dims.begin(), additional_dims.end());
-    rand_dims[3] = params.n;
+    rand_dims[3] = context.get_n();
 
     // Initialize tensor e
     TTensor e = t_eng::empty(rand_dims, T_ENG_FLOAT32_TYPE);
-    t_eng::generate_random_normal(e, 0, params.err_std);
+    t_eng::generate_random_normal(e, 0, context.get_err_std());
     e = t_eng::round(e);
     e = e.to(T_ENG_INT_TYPE);
     e = crt_utils::coefs_to_crt_q(context, state, e, n_axis, true);
@@ -116,7 +146,7 @@ std::tuple<TTensor, TTensor> AbstractEncryptionScheme::sample_randomness(
     pt_shape::PtShape& pt_shape,
     optional<global_params_and_state::State> t_state
 ) {
-    global_params_and_state::State state = t_state ? t_state.value() : context.init_state;
+    global_params_and_state::State state = t_state ? t_state.value() : context.get_state();
     return _sample_randomness(context, state, pt_shape);
 }
 
@@ -124,9 +154,8 @@ std::tuple<TTensor, TTensor> AbstractEncryptionScheme::sample_secret_key(
     context::Context& context,
     optional<global_params_and_state::State> t_state
 ) {
-    global_params_and_state::State state = t_state ? t_state.value() : context.init_state;
-    auto params = context.params;
-    TTensor coefs_sk = t_eng::empty({params.n}, T_ENG_INT_TYPE);
+    global_params_and_state::State state = t_state ? t_state.value() : context.get_state();
+    TTensor coefs_sk = t_eng::empty({context.get_n()}, T_ENG_INT_TYPE);
     t_eng::generate_random_integers(coefs_sk, 0, 2, T_ENG_INT_TYPE);
     TTensor sk = coefs_sk.clone();
     sk = crt_utils::coefs_to_crt_q(context, state, sk, -2, true);
@@ -173,7 +202,7 @@ TTensor AbstractEncryptionScheme::dec(
     std::tuple<TTensor, TTensor> res_and_error = dec_and_get_error(context, sk, ct);
     TTensor pt = std::get<0>(res_and_error);
     if (convert_to_external) {
-        pt = pt_shape::convert_internal_to_external(pt, ct.pt_shape);
+        pt = pt_shape::convert_internal_to_external(pt, ct.get_pt_shape());
     }
     return pt;
 }
@@ -197,7 +226,7 @@ TTensor AbstractEncryptionScheme::dec_and_unpack(
     TTensor pt = std::get<0>(res_and_error);
     pt = unpack_pt(context, pt);
     if (convert_to_external) {
-        pt = pt_shape::convert_internal_to_external(pt, ct.pt_shape);
+        pt = pt_shape::convert_internal_to_external(pt, ct.get_pt_shape());
     }
     return pt;
 }
@@ -218,7 +247,7 @@ Ciphertext AbstractCiphertextInitializer::_init_ct(
     optional<global_params_and_state::State> t_state,
     bool is_external
 ) {
-    global_params_and_state::State state = t_state ? t_state.value() : context.init_state;
+    global_params_and_state::State state = t_state ? t_state.value() : context.get_state();
     if (is_external) {
         pt = pt_shape::convert_external_to_internal(pt, pt_shape);
     }

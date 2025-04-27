@@ -67,8 +67,6 @@ Num::word Num::word_gcd(word a, word b) {
     }
 }
 
-Num::Num() : neg(false) {}
-
 Num::Num(size_t n, word w, bool neg) : words(n, w), neg(neg) {}
 
 Num::Num(const word* a, const word* b, bool neg) : words(a, b), neg(neg) {

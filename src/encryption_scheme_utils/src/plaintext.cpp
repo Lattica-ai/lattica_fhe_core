@@ -4,11 +4,11 @@
 namespace plaintext {
 
 TTensor encode_pt(context::Context& context, TTensor& pt) {
-    return t_eng::mod(pt, context.params.p());
+    return t_eng::mod(pt, context.p());
 }
 
 TTensor decode_pt(context::Context& context, TTensor& pt) {
-    auto p = context.params.p();
+    auto p = context.p();
     return pt - ((pt > (p/2)) * p);
 }
 

@@ -3,6 +3,7 @@
 #include "num.h"
 #include "tensor_engine.h"
 #include "mod_params_and_state.h"
+#include <ATen/Parallel.h>
 
 namespace mod_utils {
 
@@ -13,11 +14,11 @@ namespace mod_utils {
     std::vector<Num> from_crt_tensor_to_bigint(
             mod_params_and_state::ModState& mod_state,
             TTensor& a,
-            Num final_mod);
+            const Num& final_mod);
 
     std::vector<std::string> from_crt_tensor_to_bigint(
             mod_params_and_state::ModState& mod_state,
             TTensor& a,
-            std::string final_mod);
+            const std::string& final_mod);
 
 } // namespace mod_utils

@@ -58,6 +58,9 @@ extern ApplyClearParamsDefaultTypeInternal _ApplyClearParams_default_instance_;
 class ClampApplyClearParams;
 struct ClampApplyClearParamsDefaultTypeInternal;
 extern ClampApplyClearParamsDefaultTypeInternal _ClampApplyClearParams_default_instance_;
+class ClientData;
+struct ClientDataDefaultTypeInternal;
+extern ClientDataDefaultTypeInternal _ClientData_default_instance_;
 class ConstAddApplyClearParams;
 struct ConstAddApplyClearParamsDefaultTypeInternal;
 extern ConstAddApplyClearParamsDefaultTypeInternal _ConstAddApplyClearParams_default_instance_;
@@ -269,34 +272,58 @@ class UnfoldApplyClearParams final : public ::google::protobuf::Message
     kPaddingFieldNumber = 2,
     kStrideFieldNumber = 3,
   };
-  // int32 kernel_size = 1;
+  // repeated int32 kernel_size = 1;
+  int kernel_size_size() const;
+  private:
+  int _internal_kernel_size_size() const;
+
+  public:
   void clear_kernel_size() ;
-  ::int32_t kernel_size() const;
-  void set_kernel_size(::int32_t value);
+  ::int32_t kernel_size(int index) const;
+  void set_kernel_size(int index, ::int32_t value);
+  void add_kernel_size(::int32_t value);
+  const ::google::protobuf::RepeatedField<::int32_t>& kernel_size() const;
+  ::google::protobuf::RepeatedField<::int32_t>* mutable_kernel_size();
 
   private:
-  ::int32_t _internal_kernel_size() const;
-  void _internal_set_kernel_size(::int32_t value);
+  const ::google::protobuf::RepeatedField<::int32_t>& _internal_kernel_size() const;
+  ::google::protobuf::RepeatedField<::int32_t>* _internal_mutable_kernel_size();
 
   public:
-  // int32 padding = 2;
+  // repeated int32 padding = 2;
+  int padding_size() const;
+  private:
+  int _internal_padding_size() const;
+
+  public:
   void clear_padding() ;
-  ::int32_t padding() const;
-  void set_padding(::int32_t value);
+  ::int32_t padding(int index) const;
+  void set_padding(int index, ::int32_t value);
+  void add_padding(::int32_t value);
+  const ::google::protobuf::RepeatedField<::int32_t>& padding() const;
+  ::google::protobuf::RepeatedField<::int32_t>* mutable_padding();
 
   private:
-  ::int32_t _internal_padding() const;
-  void _internal_set_padding(::int32_t value);
+  const ::google::protobuf::RepeatedField<::int32_t>& _internal_padding() const;
+  ::google::protobuf::RepeatedField<::int32_t>* _internal_mutable_padding();
 
   public:
-  // int32 stride = 3;
+  // repeated int32 stride = 3;
+  int stride_size() const;
+  private:
+  int _internal_stride_size() const;
+
+  public:
   void clear_stride() ;
-  ::int32_t stride() const;
-  void set_stride(::int32_t value);
+  ::int32_t stride(int index) const;
+  void set_stride(int index, ::int32_t value);
+  void add_stride(::int32_t value);
+  const ::google::protobuf::RepeatedField<::int32_t>& stride() const;
+  ::google::protobuf::RepeatedField<::int32_t>* mutable_stride();
 
   private:
-  ::int32_t _internal_stride() const;
-  void _internal_set_stride(::int32_t value);
+  const ::google::protobuf::RepeatedField<::int32_t>& _internal_stride() const;
+  ::google::protobuf::RepeatedField<::int32_t>* _internal_mutable_stride();
 
   public:
   // @@protoc_insertion_point(class_scope:lattica_proto.UnfoldApplyClearParams)
@@ -325,9 +352,12 @@ class UnfoldApplyClearParams final : public ::google::protobuf::Message
     inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
                           ::google::protobuf::Arena* arena, const Impl_& from,
                           const UnfoldApplyClearParams& from_msg);
-    ::int32_t kernel_size_;
-    ::int32_t padding_;
-    ::int32_t stride_;
+    ::google::protobuf::RepeatedField<::int32_t> kernel_size_;
+    mutable ::google::protobuf::internal::CachedSize _kernel_size_cached_byte_size_;
+    ::google::protobuf::RepeatedField<::int32_t> padding_;
+    mutable ::google::protobuf::internal::CachedSize _padding_cached_byte_size_;
+    ::google::protobuf::RepeatedField<::int32_t> stride_;
+    mutable ::google::protobuf::internal::CachedSize _stride_cached_byte_size_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -679,6 +709,201 @@ class ReshapeApplyClearParams final : public ::google::protobuf::Message
                           const ReshapeApplyClearParams& from_msg);
     ::google::protobuf::RepeatedField<::int32_t> dims_;
     mutable ::google::protobuf::internal::CachedSize _dims_cached_byte_size_;
+    mutable ::google::protobuf::internal::CachedSize _cached_size_;
+    PROTOBUF_TSAN_DECLARE_MEMBER
+  };
+  union { Impl_ _impl_; };
+  friend struct ::TableStruct_serialization_2fhom_5fop_2eproto;
+};
+// -------------------------------------------------------------------
+
+class ClientData final : public ::google::protobuf::Message
+/* @@protoc_insertion_point(class_definition:lattica_proto.ClientData) */ {
+ public:
+  inline ClientData() : ClientData(nullptr) {}
+  ~ClientData() override;
+  template <typename = void>
+  explicit PROTOBUF_CONSTEXPR ClientData(
+      ::google::protobuf::internal::ConstantInitialized);
+
+  inline ClientData(const ClientData& from) : ClientData(nullptr, from) {}
+  inline ClientData(ClientData&& from) noexcept
+      : ClientData(nullptr, std::move(from)) {}
+  inline ClientData& operator=(const ClientData& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline ClientData& operator=(ClientData&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetArena() == from.GetArena()
+#ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetArena() != nullptr
+#endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance);
+  }
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields()
+      ABSL_ATTRIBUTE_LIFETIME_BOUND {
+    return _internal_metadata_.mutable_unknown_fields<::google::protobuf::UnknownFieldSet>();
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::google::protobuf::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::google::protobuf::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const ClientData& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const ClientData* internal_default_instance() {
+    return reinterpret_cast<const ClientData*>(
+        &_ClientData_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages = 10;
+  friend void swap(ClientData& a, ClientData& b) { a.Swap(&b); }
+  inline void Swap(ClientData* other) {
+    if (other == this) return;
+#ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() != nullptr && GetArena() == other->GetArena()) {
+#else   // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetArena() == other->GetArena()) {
+#endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::google::protobuf::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(ClientData* other) {
+    if (other == this) return;
+    ABSL_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  ClientData* New(::google::protobuf::Arena* arena = nullptr) const final {
+    return ::google::protobuf::Message::DefaultConstruct<ClientData>(arena);
+  }
+  using ::google::protobuf::Message::CopyFrom;
+  void CopyFrom(const ClientData& from);
+  using ::google::protobuf::Message::MergeFrom;
+  void MergeFrom(const ClientData& from) { ClientData::MergeImpl(*this, from); }
+
+  private:
+  static void MergeImpl(
+      ::google::protobuf::MessageLite& to_msg,
+      const ::google::protobuf::MessageLite& from_msg);
+
+  public:
+  bool IsInitialized() const {
+    return true;
+  }
+  ABSL_ATTRIBUTE_REINITIALIZES void Clear() final;
+  ::size_t ByteSizeLong() const final;
+  ::uint8_t* _InternalSerialize(
+      ::uint8_t* target,
+      ::google::protobuf::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const { return _impl_._cached_size_.Get(); }
+
+  private:
+  void SharedCtor(::google::protobuf::Arena* arena);
+  void SharedDtor();
+  void InternalSwap(ClientData* other);
+ private:
+  friend class ::google::protobuf::internal::AnyMetadata;
+  static ::absl::string_view FullMessageName() { return "lattica_proto.ClientData"; }
+
+ protected:
+  explicit ClientData(::google::protobuf::Arena* arena);
+  ClientData(::google::protobuf::Arena* arena, const ClientData& from);
+  ClientData(::google::protobuf::Arena* arena, ClientData&& from) noexcept
+      : ClientData(arena) {
+    *this = ::std::move(from);
+  }
+  const ::google::protobuf::Message::ClassData* GetClassData() const final;
+
+ public:
+  ::google::protobuf::Metadata GetMetadata() const;
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+  enum : int {
+    kSerializedContextFieldNumber = 1,
+    kSerializedClientSequentialHomOpFieldNumber = 2,
+  };
+  // bytes serialized_context = 1;
+  void clear_serialized_context() ;
+  const std::string& serialized_context() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_serialized_context(Arg_&& arg, Args_... args);
+  std::string* mutable_serialized_context();
+  PROTOBUF_NODISCARD std::string* release_serialized_context();
+  void set_allocated_serialized_context(std::string* value);
+
+  private:
+  const std::string& _internal_serialized_context() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_serialized_context(
+      const std::string& value);
+  std::string* _internal_mutable_serialized_context();
+
+  public:
+  // bytes serialized_client_sequential_hom_op = 2;
+  void clear_serialized_client_sequential_hom_op() ;
+  const std::string& serialized_client_sequential_hom_op() const;
+  template <typename Arg_ = const std::string&, typename... Args_>
+  void set_serialized_client_sequential_hom_op(Arg_&& arg, Args_... args);
+  std::string* mutable_serialized_client_sequential_hom_op();
+  PROTOBUF_NODISCARD std::string* release_serialized_client_sequential_hom_op();
+  void set_allocated_serialized_client_sequential_hom_op(std::string* value);
+
+  private:
+  const std::string& _internal_serialized_client_sequential_hom_op() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_serialized_client_sequential_hom_op(
+      const std::string& value);
+  std::string* _internal_mutable_serialized_client_sequential_hom_op();
+
+  public:
+  // @@protoc_insertion_point(class_scope:lattica_proto.ClientData)
+ private:
+  class _Internal;
+  friend class ::google::protobuf::internal::TcParser;
+  static const ::google::protobuf::internal::TcParseTable<
+      1, 2, 0,
+      0, 2>
+      _table_;
+
+  static constexpr const void* _raw_default_instance_ =
+      &_ClientData_default_instance_;
+
+  friend class ::google::protobuf::MessageLite;
+  friend class ::google::protobuf::Arena;
+  template <typename T>
+  friend class ::google::protobuf::Arena::InternalHelper;
+  using InternalArenaConstructable_ = void;
+  using DestructorSkippable_ = void;
+  struct Impl_ {
+    inline explicit constexpr Impl_(
+        ::google::protobuf::internal::ConstantInitialized) noexcept;
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena);
+    inline explicit Impl_(::google::protobuf::internal::InternalVisibility visibility,
+                          ::google::protobuf::Arena* arena, const Impl_& from,
+                          const ClientData& from_msg);
+    ::google::protobuf::internal::ArenaStringPtr serialized_context_;
+    ::google::protobuf::internal::ArenaStringPtr serialized_client_sequential_hom_op_;
     mutable ::google::protobuf::internal::CachedSize _cached_size_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
@@ -2163,70 +2388,139 @@ class QueryClientSequentialHomOp final : public ::google::protobuf::Message
 
 // UnfoldApplyClearParams
 
-// int32 kernel_size = 1;
+// repeated int32 kernel_size = 1;
+inline int UnfoldApplyClearParams::_internal_kernel_size_size() const {
+  return _internal_kernel_size().size();
+}
+inline int UnfoldApplyClearParams::kernel_size_size() const {
+  return _internal_kernel_size_size();
+}
 inline void UnfoldApplyClearParams::clear_kernel_size() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.kernel_size_ = 0;
+  _impl_.kernel_size_.Clear();
 }
-inline ::int32_t UnfoldApplyClearParams::kernel_size() const {
+inline ::int32_t UnfoldApplyClearParams::kernel_size(int index) const {
   // @@protoc_insertion_point(field_get:lattica_proto.UnfoldApplyClearParams.kernel_size)
-  return _internal_kernel_size();
+  return _internal_kernel_size().Get(index);
 }
-inline void UnfoldApplyClearParams::set_kernel_size(::int32_t value) {
-  _internal_set_kernel_size(value);
+inline void UnfoldApplyClearParams::set_kernel_size(int index, ::int32_t value) {
+  _internal_mutable_kernel_size()->Set(index, value);
   // @@protoc_insertion_point(field_set:lattica_proto.UnfoldApplyClearParams.kernel_size)
 }
-inline ::int32_t UnfoldApplyClearParams::_internal_kernel_size() const {
+inline void UnfoldApplyClearParams::add_kernel_size(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _internal_mutable_kernel_size()->Add(value);
+  // @@protoc_insertion_point(field_add:lattica_proto.UnfoldApplyClearParams.kernel_size)
+}
+inline const ::google::protobuf::RepeatedField<::int32_t>& UnfoldApplyClearParams::kernel_size() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:lattica_proto.UnfoldApplyClearParams.kernel_size)
+  return _internal_kernel_size();
+}
+inline ::google::protobuf::RepeatedField<::int32_t>* UnfoldApplyClearParams::mutable_kernel_size()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable_list:lattica_proto.UnfoldApplyClearParams.kernel_size)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_kernel_size();
+}
+inline const ::google::protobuf::RepeatedField<::int32_t>&
+UnfoldApplyClearParams::_internal_kernel_size() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.kernel_size_;
 }
-inline void UnfoldApplyClearParams::_internal_set_kernel_size(::int32_t value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.kernel_size_ = value;
+inline ::google::protobuf::RepeatedField<::int32_t>* UnfoldApplyClearParams::_internal_mutable_kernel_size() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.kernel_size_;
 }
 
-// int32 padding = 2;
+// repeated int32 padding = 2;
+inline int UnfoldApplyClearParams::_internal_padding_size() const {
+  return _internal_padding().size();
+}
+inline int UnfoldApplyClearParams::padding_size() const {
+  return _internal_padding_size();
+}
 inline void UnfoldApplyClearParams::clear_padding() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.padding_ = 0;
+  _impl_.padding_.Clear();
 }
-inline ::int32_t UnfoldApplyClearParams::padding() const {
+inline ::int32_t UnfoldApplyClearParams::padding(int index) const {
   // @@protoc_insertion_point(field_get:lattica_proto.UnfoldApplyClearParams.padding)
-  return _internal_padding();
+  return _internal_padding().Get(index);
 }
-inline void UnfoldApplyClearParams::set_padding(::int32_t value) {
-  _internal_set_padding(value);
+inline void UnfoldApplyClearParams::set_padding(int index, ::int32_t value) {
+  _internal_mutable_padding()->Set(index, value);
   // @@protoc_insertion_point(field_set:lattica_proto.UnfoldApplyClearParams.padding)
 }
-inline ::int32_t UnfoldApplyClearParams::_internal_padding() const {
+inline void UnfoldApplyClearParams::add_padding(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _internal_mutable_padding()->Add(value);
+  // @@protoc_insertion_point(field_add:lattica_proto.UnfoldApplyClearParams.padding)
+}
+inline const ::google::protobuf::RepeatedField<::int32_t>& UnfoldApplyClearParams::padding() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:lattica_proto.UnfoldApplyClearParams.padding)
+  return _internal_padding();
+}
+inline ::google::protobuf::RepeatedField<::int32_t>* UnfoldApplyClearParams::mutable_padding()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable_list:lattica_proto.UnfoldApplyClearParams.padding)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_padding();
+}
+inline const ::google::protobuf::RepeatedField<::int32_t>&
+UnfoldApplyClearParams::_internal_padding() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.padding_;
 }
-inline void UnfoldApplyClearParams::_internal_set_padding(::int32_t value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.padding_ = value;
+inline ::google::protobuf::RepeatedField<::int32_t>* UnfoldApplyClearParams::_internal_mutable_padding() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.padding_;
 }
 
-// int32 stride = 3;
+// repeated int32 stride = 3;
+inline int UnfoldApplyClearParams::_internal_stride_size() const {
+  return _internal_stride().size();
+}
+inline int UnfoldApplyClearParams::stride_size() const {
+  return _internal_stride_size();
+}
 inline void UnfoldApplyClearParams::clear_stride() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.stride_ = 0;
+  _impl_.stride_.Clear();
 }
-inline ::int32_t UnfoldApplyClearParams::stride() const {
+inline ::int32_t UnfoldApplyClearParams::stride(int index) const {
   // @@protoc_insertion_point(field_get:lattica_proto.UnfoldApplyClearParams.stride)
-  return _internal_stride();
+  return _internal_stride().Get(index);
 }
-inline void UnfoldApplyClearParams::set_stride(::int32_t value) {
-  _internal_set_stride(value);
+inline void UnfoldApplyClearParams::set_stride(int index, ::int32_t value) {
+  _internal_mutable_stride()->Set(index, value);
   // @@protoc_insertion_point(field_set:lattica_proto.UnfoldApplyClearParams.stride)
 }
-inline ::int32_t UnfoldApplyClearParams::_internal_stride() const {
+inline void UnfoldApplyClearParams::add_stride(::int32_t value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _internal_mutable_stride()->Add(value);
+  // @@protoc_insertion_point(field_add:lattica_proto.UnfoldApplyClearParams.stride)
+}
+inline const ::google::protobuf::RepeatedField<::int32_t>& UnfoldApplyClearParams::stride() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_list:lattica_proto.UnfoldApplyClearParams.stride)
+  return _internal_stride();
+}
+inline ::google::protobuf::RepeatedField<::int32_t>* UnfoldApplyClearParams::mutable_stride()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_mutable_list:lattica_proto.UnfoldApplyClearParams.stride)
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _internal_mutable_stride();
+}
+inline const ::google::protobuf::RepeatedField<::int32_t>&
+UnfoldApplyClearParams::_internal_stride() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
   return _impl_.stride_;
 }
-inline void UnfoldApplyClearParams::_internal_set_stride(::int32_t value) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.stride_ = value;
+inline ::google::protobuf::RepeatedField<::int32_t>* UnfoldApplyClearParams::_internal_mutable_stride() {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return &_impl_.stride_;
 }
 
 // -------------------------------------------------------------------
@@ -3651,6 +3945,110 @@ inline void QueryClientSequentialHomOp::set_allocated_preprocessing_data(std::st
         }
   #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   // @@protoc_insertion_point(field_set_allocated:lattica_proto.QueryClientSequentialHomOp.preprocessing_data)
+}
+
+// -------------------------------------------------------------------
+
+// ClientData
+
+// bytes serialized_context = 1;
+inline void ClientData::clear_serialized_context() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.serialized_context_.ClearToEmpty();
+}
+inline const std::string& ClientData::serialized_context() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:lattica_proto.ClientData.serialized_context)
+  return _internal_serialized_context();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void ClientData::set_serialized_context(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.serialized_context_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:lattica_proto.ClientData.serialized_context)
+}
+inline std::string* ClientData::mutable_serialized_context() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_serialized_context();
+  // @@protoc_insertion_point(field_mutable:lattica_proto.ClientData.serialized_context)
+  return _s;
+}
+inline const std::string& ClientData::_internal_serialized_context() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.serialized_context_.Get();
+}
+inline void ClientData::_internal_set_serialized_context(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.serialized_context_.Set(value, GetArena());
+}
+inline std::string* ClientData::_internal_mutable_serialized_context() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.serialized_context_.Mutable( GetArena());
+}
+inline std::string* ClientData::release_serialized_context() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:lattica_proto.ClientData.serialized_context)
+  return _impl_.serialized_context_.Release();
+}
+inline void ClientData::set_allocated_serialized_context(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.serialized_context_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_.serialized_context_.IsDefault()) {
+          _impl_.serialized_context_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:lattica_proto.ClientData.serialized_context)
+}
+
+// bytes serialized_client_sequential_hom_op = 2;
+inline void ClientData::clear_serialized_client_sequential_hom_op() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.serialized_client_sequential_hom_op_.ClearToEmpty();
+}
+inline const std::string& ClientData::serialized_client_sequential_hom_op() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:lattica_proto.ClientData.serialized_client_sequential_hom_op)
+  return _internal_serialized_client_sequential_hom_op();
+}
+template <typename Arg_, typename... Args_>
+inline PROTOBUF_ALWAYS_INLINE void ClientData::set_serialized_client_sequential_hom_op(Arg_&& arg,
+                                                     Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.serialized_client_sequential_hom_op_.SetBytes(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:lattica_proto.ClientData.serialized_client_sequential_hom_op)
+}
+inline std::string* ClientData::mutable_serialized_client_sequential_hom_op() ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  std::string* _s = _internal_mutable_serialized_client_sequential_hom_op();
+  // @@protoc_insertion_point(field_mutable:lattica_proto.ClientData.serialized_client_sequential_hom_op)
+  return _s;
+}
+inline const std::string& ClientData::_internal_serialized_client_sequential_hom_op() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.serialized_client_sequential_hom_op_.Get();
+}
+inline void ClientData::_internal_set_serialized_client_sequential_hom_op(const std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.serialized_client_sequential_hom_op_.Set(value, GetArena());
+}
+inline std::string* ClientData::_internal_mutable_serialized_client_sequential_hom_op() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.serialized_client_sequential_hom_op_.Mutable( GetArena());
+}
+inline std::string* ClientData::release_serialized_client_sequential_hom_op() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:lattica_proto.ClientData.serialized_client_sequential_hom_op)
+  return _impl_.serialized_client_sequential_hom_op_.Release();
+}
+inline void ClientData::set_allocated_serialized_client_sequential_hom_op(std::string* value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.serialized_client_sequential_hom_op_.SetAllocated(value, GetArena());
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+        if (_impl_.serialized_client_sequential_hom_op_.IsDefault()) {
+          _impl_.serialized_client_sequential_hom_op_.Set("", GetArena());
+        }
+  #endif  // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:lattica_proto.ClientData.serialized_client_sequential_hom_op)
 }
 
 #ifdef __GNUC__

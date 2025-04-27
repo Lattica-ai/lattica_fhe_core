@@ -3,6 +3,7 @@
 #include "num.h"
 #include "plaintext.h"
 #include "mod_utils.h"
+#include "mod_ops.h"
 
 namespace encryption_schemes {
 
@@ -25,8 +26,6 @@ Ciphertext RBGV_Ciphertext::init_from_ct_and_state(
     return new_ct;
 }
 
-RBGV_Ciphertext::RBGV_Ciphertext() {}
-
 void RBGV_Ciphertext::init(lattica_proto::RBGV_Ciphertext proto) {
     Ciphertext::init(proto.ciphertext());
     correction_factor = proto.correction_factor();
@@ -42,7 +41,7 @@ lattica_proto::RBGV_Ciphertext RBGV_Ciphertext::to_proto(
     return *proto;
 }
 
-RBGV_Ciphertext::RBGV_Ciphertext(string& proto_str) : RBGV_Ciphertext() {
+RBGV_Ciphertext::RBGV_Ciphertext(const string& proto_str) : RBGV_Ciphertext() {
     GOOGLE_PROTOBUF_VERIFY_VERSION;
     lattica_proto::RBGV_Ciphertext proto;
     proto.ParseFromString(proto_str);
@@ -56,8 +55,11 @@ Ciphertext RBGV_Ciphertext::make_copy(
     optional<global_params_and_state::State> t_state
 ) {
     Ciphertext new_ct = Ciphertext::make_copy(t_a, t_b, t_pt_shape, t_state);
-    return RBGV_Ciphertext(
-        new_ct.a, new_ct.b, new_ct.pt_shape, new_ct.state.value(), correction_factor);
+    return RBGV_Ciphertext(new_ct.get_a(), new_ct.get_b(), new_ct.get_pt_shape(), new_ct.get_state(), correction_factor);
+}
+
+int RBGV_Ciphertext::get_correction_factor() const{
+    return correction_factor;
 }
 
 RBGV_Ciphertext _RBGV::init_ct(
@@ -69,9 +71,8 @@ RBGV_Ciphertext _RBGV::init_ct(
     optional<std::vector<double>> t_pt_scale,
     bool is_external
 ) {
-    Ciphertext ct = AbstractCiphertextInitializer::_init_ct(
-        context, sk, pt, pt_shape, t_state, is_external);
-    return RBGV_Ciphertext(ct.a, ct.b, ct.pt_shape, ct.state.value());
+    Ciphertext ct = AbstractCiphertextInitializer::_init_ct(context, sk, pt, pt_shape, t_state, is_external);
+    return RBGV_Ciphertext(ct.get_a(), ct.get_b(), ct.get_pt_shape(), ct.get_state());
 }
 
 TTensor _RBGV::_enc(
@@ -82,10 +83,9 @@ TTensor _RBGV::_enc(
     TTensor& a,
     TTensor& e
 ) {
-    auto params = context.params;
     TTensor sk_a = t_eng::modmul(a, sk, state.q_list(), false);
     pt = plaintext::encode_pt(context, pt);
-    TTensor e_scaled = t_eng::modmul(e, params.p(), state.q_list());
+    TTensor e_scaled = t_eng::modmul(e, context.p(), state.q_list());
     pt = crt_utils::coefs_to_crt_q(context, state, pt, -2, true);
     TTensor b = t_eng::modsum(sk_a, e_scaled + pt, state.q_list(), true);
     return b;
@@ -122,19 +122,17 @@ std::tuple<TTensor, TTensor> _RBGV::dec_and_get_error(
     TTensor& sk_coefs,
     Ciphertext& ct
 ) {
-    auto params = context.params;
-    auto state = ct.state.value();
-
+    auto state = ct.get_state();
     sk_coefs = sk_coefs.unsqueeze(-2).unsqueeze(-2);
     sk_coefs = mod_utils::to_crt_tensor(state.q_list(), sk_coefs);
     sk_coefs = t_eng::mod(-sk_coefs, state.q_list());
     TTensor sk = crt_utils::coefs_to_crt_q(context, state, sk_coefs, -2, false).unsqueeze(-3);
-    TTensor sk_a = t_eng::modmul(ct.a, sk, state.q_list(), false);
-    TTensor temp = t_eng::modsum(ct.b, sk_a, state.q_list(), false);
+    TTensor sk_a = t_eng::modmul(ct.get_a(), sk, state.q_list(), false);
+    TTensor temp = t_eng::modsum(ct.get_b(), sk_a, state.q_list(), false);
     temp = crt_utils::crt_to_coefs_q(context, state, temp, -2, false);
-    Num q = Num(state.mod_state.active_q);
+    const Num& q = state.get_active_q();
     Num half_q = q / 2;
-    std::vector<Num> temp_res = mod_utils::from_crt_tensor_to_bigint(state.mod_state, temp, q);
+    std::vector<Num> temp_res = mod_utils::from_crt_tensor_to_bigint(state.get_mod_state(), temp, q);
 
     std::vector<int64_t> res_shape = temp.sizes().vec();
     res_shape.pop_back();
@@ -143,22 +141,22 @@ std::tuple<TTensor, TTensor> _RBGV::dec_and_get_error(
     pt_res = pt_res.reshape({-1});
     err = err.reshape({-1});
 
-    for (int i = 0; i < temp_res.size(); i++) {
+    for (size_t i = 0; i < temp_res.size(); i++) {
         Num temp_i = temp_res[i];
         if (temp_i > half_q) {
             temp_i = temp_i - q;
         }
-        temp_i = temp_i * dynamic_cast<RBGV_Ciphertext*>(&ct)->correction_factor;
-        Num pt_i = temp_i % params.p_np();
+        temp_i = temp_i * dynamic_cast<RBGV_Ciphertext*>(&ct)->get_correction_factor();
+        Num pt_i = temp_i % context.p_np();
         if (pt_i < 0) {
-            pt_i = pt_i + params.p_np();
+            pt_i = pt_i + context.p_np();
         }
         int pt_res_i;
         pt_i.can_convert_to_int(&pt_res_i);
         pt_res[i] = pt_res_i;
 
         temp_i = temp_i - pt_i;
-        temp_i = temp_i / params.p_np();
+        temp_i = temp_i / context.p_np();
         int err_i;
         temp_i.can_convert_to_int(&err_i);
         err[i] = err_i;

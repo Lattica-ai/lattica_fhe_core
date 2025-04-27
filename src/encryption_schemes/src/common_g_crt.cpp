@@ -1,5 +1,6 @@
 #include <ATen/ATen.h>
 #include "common_g_crt.h"
+#include "mod_ops.h"
 
 namespace encryption_schemes {
 
@@ -8,8 +9,8 @@ std::tuple<TTensor, TTensor> _EncryptionScheme_G_CRT::sample_randomness(
         pt_shape::PtShape& pt_shape,
         optional<global_params_and_state::State> t_state) {
 
-    global_params_and_state::State state = t_state ? t_state.value() : context.init_state;
-    std::vector<int64_t> additional_dims = {state.len_q_list(), context.params.pt_g_params.g_exp};
+    global_params_and_state::State state = t_state ? t_state.value() : context.get_state();
+    std::vector<int64_t> additional_dims = {state.len_q_list(), context.get_pt_g_params().get_g_exp()};
     TTensor a, e;
     std::tie(a, e) = _sample_randomness(context, state, pt_shape, additional_dims, -4 /* n_axis */);
     a = a.moveaxis(0, -4).index({0, 0});
@@ -25,21 +26,14 @@ TTensor _EncryptionScheme_G_CRT::_enc(
         TTensor& a,
         TTensor& e) {
 
-    auto params = context.params;
-    TTensor sk_a = t_eng::modmul(
-        a, sk.unsqueeze(-2).unsqueeze(-2).unsqueeze(-2), state.q_list(), false
-    );
-    TTensor new_g = (
-        t_eng::eye(state.len_q_list()).unsqueeze(1) * params.g_params.get_g_vec(state).unsqueeze(0)
-    );
+    TTensor sk_a = t_eng::modmul(a, sk.unsqueeze(-2).unsqueeze(-2).unsqueeze(-2), state.q_list(), false);
+    TTensor new_g = (t_eng::eye(state.len_q_list()).unsqueeze(1) * context.get_g_params().get_g_vec(state).unsqueeze(0));
+
     pt = pt.moveaxis(0, 1);
-    TTensor pt_g = t_eng::modmul(
-        new_g,
-        pt.unsqueeze(-2).unsqueeze(-2),
-        state.q_list(), true
-    );
+    TTensor pt_g = t_eng::modmul(new_g, pt.unsqueeze(-2).unsqueeze(-2), state.q_list(), true);
     TTensor temp = t_eng::modsum(pt_g, e, state.q_list(), true);
     TTensor b = t_eng::modsum(temp, sk_a, state.q_list(), true);
+
     return b;
 }
 

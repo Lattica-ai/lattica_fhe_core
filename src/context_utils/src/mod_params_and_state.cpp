@@ -2,8 +2,6 @@
 
 namespace mod_params_and_state {
 
-ModState::ModState() {}
-
 void ModState::init(lattica_proto::ModState proto) {
     active_q = Num(proto.active_q().data().c_str());
     active_len_q_list = proto.active_len_q_list();
@@ -41,32 +39,48 @@ lattica_proto::ModState ModState::to_proto(optional<lattica_proto::ModState*> t_
     return *proto;
 }
 
-ModState::ModState(string& proto_str) : ModState() {
+ModState::ModState(const string& proto_str) : ModState() {
     GOOGLE_PROTOBUF_VERIFY_VERSION;
     lattica_proto::ModState proto;
     proto.ParseFromString(proto_str);
     init(proto);
 }
 
-TTensor& ModState::q_list() {
-    return active_q_list;
-}
-
-int ModState::len_q_list() {
-    return active_len_q_list;
-}
-
 TTensor& ModState::slice_to_active_q_list(TTensor& a) {
     std::vector<int64_t> orig_shape = a.sizes().vec();
     a = a.reshape({-1, a.size(-2), a.size(-1)});
     a = a.index({Slice(None), active_rows, Slice(None)});
-    active_cols = active_cols.unsqueeze(0).unsqueeze(-1);
-    a = t_eng::take_along_axis(a, active_cols, -1);
+    TTensor cols_view = active_cols.unsqueeze(0).unsqueeze(-1);
+    a = t_eng::take_along_axis(a, cols_view, -1);
     a = a.flatten(0, -3);
     orig_shape.resize(a.dim() - 2);
     orig_shape.push_back(-1);
     a = a.reshape(orig_shape);
     return a;
+}
+
+TTensor& ModState::q_list() {
+    return active_q_list;
+}
+
+int ModState::len_q_list() const {
+    return active_len_q_list;
+}
+
+const Num& ModState::get_active_q() const {
+    return active_q;
+}
+
+TTensor& ModState::get_active_rows() {
+    return active_rows;
+}
+
+size_t ModState::get_active_reconstruction_terms_size() const {
+    return active_reconstruction_terms.size();
+}
+
+const Num& ModState::get_active_reconstruction_terms(int i) const  {
+    return active_reconstruction_terms[i];
 }
 
 } // namespace mod_params_and_state

@@ -35,8 +35,7 @@ TTensor crt_to_coefs_q(
         int axis,
         bool tile)
 {
-    TTensor res = crt_to_coefs(
-        ctx.params.crt_params, state.crt_state, a, axis, tile);
+    TTensor res = crt_to_coefs(ctx.get_crt_params(), state.get_crt_state(), a, axis, tile);
     return res;
 }
 
@@ -47,8 +46,7 @@ TTensor coefs_to_crt_q(
         int axis,
         bool tile)
 {
-    TTensor res = coefs_to_crt(
-        ctx.params.crt_params, state.crt_state, a, axis, tile);
+    TTensor res = coefs_to_crt(ctx.get_crt_params(), state.get_crt_state(), a, axis, tile);
     return res;
 }
 
@@ -57,8 +55,7 @@ TTensor crt_to_coefs_p(
         TTensor& a)
 {
     a = a.unsqueeze(-1);
-    TTensor res = crt_to_coefs(
-        ctx.params.pt_pack_params, ctx.params.pt_pack_state, a, -2, false);
+    TTensor res = crt_to_coefs(ctx.get_pt_pack_params(), ctx.get_pt_pack_state(), a, -2, false);
     res = res.squeeze(-1);
     return res;
 }
@@ -68,8 +65,7 @@ TTensor coefs_to_crt_p(
         TTensor& a)
 {
     a = a.unsqueeze(-1);
-    TTensor res = coefs_to_crt(
-        ctx.params.pt_pack_params, ctx.params.pt_pack_state, a, -2, false);
+    TTensor res = coefs_to_crt(ctx.get_pt_pack_params(), ctx.get_pt_pack_state(), a, -2, false);
     res = res.squeeze(-1);
     return res;
 }

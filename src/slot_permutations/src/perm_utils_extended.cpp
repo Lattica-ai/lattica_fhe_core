@@ -16,7 +16,7 @@ TTensor propagate_crt_perms_on_input(
     int start = 1;
     int end = 2;
     for (int i = 0; i < n_perms; i++) {
-        TTensor perm_i_idxs = crt_perms.new_idxs.index({i}).unsqueeze(0);
+        TTensor perm_i_idxs = crt_perms.get_new_idxs().index({i}).unsqueeze(0);
         TTensor target_start = target.index({Slice(0, start)});
         TTensor rotated_target = apply_crt_permutation(
             target_start, CrtPermutations(perm_i_idxs), axis);
@@ -31,9 +31,9 @@ TTensor propagate_crt_perms_on_input(
 
 CrtPermutations get_perms_base_crt(context::Context context, std::optional<bool> half_sized) {
     if (!half_sized || !half_sized.value()) {
-        return context.params.perms_base_crt;
+        return context.get_perms_base_crt();
     }
-    TTensor new_idxs = context.params.perms_base_crt.new_idxs.index({Slice(1, None)});
+    TTensor new_idxs = context.get_perms_base_crt().get_new_idxs().index({Slice(1, None)});
     return CrtPermutations(new_idxs);
 }
 

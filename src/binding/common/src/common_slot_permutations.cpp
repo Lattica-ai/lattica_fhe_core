@@ -6,8 +6,8 @@
 namespace perm_utils {
 
 string raw_apply_crt_permutation_elementwise(
-        string& serialized_a,
-        string& perms_proto_str,
+        const string& serialized_a,
+        const string& perms_proto_str,
         int axis,
         int elements_axis) {
     TTensor a = serialization_utils::deser_tensor_from_str(serialized_a);
@@ -17,8 +17,8 @@ string raw_apply_crt_permutation_elementwise(
 }
 
 string raw_apply_crt_permutation(
-        string& serialized_a,
-        string& perms_proto_str,
+        const string& serialized_a,
+        const string& perms_proto_str,
         int axis,
         int elements_axis) {
     TTensor a = serialization_utils::deser_tensor_from_str(serialized_a);
@@ -28,8 +28,8 @@ string raw_apply_crt_permutation(
 }
 
 string raw_propagate_crt_perms_on_input(
-        string& serialized_a,
-        string& perms_proto_str,
+        const string& serialized_a,
+        const string& perms_proto_str,
         int axis,
         bool return_identity) {
     TTensor a = serialization_utils::deser_tensor_from_str(serialized_a);

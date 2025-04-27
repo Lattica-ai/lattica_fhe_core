@@ -9,35 +9,34 @@ namespace encryption_schemes {
 
 class RBGV_Ciphertext : public Ciphertext {
 public:
-    int correction_factor = 1;
-
+    RBGV_Ciphertext() = default;
+    RBGV_Ciphertext(const string& proto_str);
     RBGV_Ciphertext(
-        TTensor& t_a, 
+        TTensor& t_a,
         TTensor& t_b,
         pt_shape::PtShape& t_pt_shape,
         global_params_and_state::State& t_state,
         int t_correction_factor = 1
     );
 
-    virtual Ciphertext init_from_ct_and_state(
+    Ciphertext init_from_ct_and_state(
         RBGV_Ciphertext& ct,
         global_params_and_state::State& t_state
     );
 
-    RBGV_Ciphertext();
-
-    virtual void init(lattica_proto::RBGV_Ciphertext proto);
-
+    void init(lattica_proto::RBGV_Ciphertext proto);
     lattica_proto::RBGV_Ciphertext to_proto(optional<lattica_proto::RBGV_Ciphertext*> t_proto = nullopt);
-
-    RBGV_Ciphertext(string& proto_str);
-
     virtual Ciphertext make_copy(
         optional<TTensor> t_a = {},
         optional<TTensor> t_b = {},
         optional<pt_shape::PtShape> t_pt_shape = {},
         optional<global_params_and_state::State> t_state = {}
     );
+
+    int get_correction_factor() const;
+
+private:
+    int correction_factor = 1;
 };
 
 class _RBGV : public AbstractCiphertextInitializer {

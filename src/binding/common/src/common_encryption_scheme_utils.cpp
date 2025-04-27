@@ -5,9 +5,9 @@
 namespace pt_shape {
 
 std::string raw_convert_internal_to_external(
-    std::string& serialized_a,
-    std::string& pt_shape_proto_str) {
-    
+    const std::string& serialized_a,
+    const std::string& pt_shape_proto_str) {
+
     PtShape pt_shape = PtShape(pt_shape_proto_str);
     TTensor a = serialization_utils::deser_tensor_from_str(serialized_a);
     auto res = convert_internal_to_external(a, pt_shape);
@@ -15,9 +15,9 @@ std::string raw_convert_internal_to_external(
 }
 
 std::string raw_convert_external_to_internal(
-    std::string& serialized_a,
-    std::string& pt_shape_proto_str) {
-    
+    const std::string& serialized_a,
+    const std::string& pt_shape_proto_str) {
+
     PtShape pt_shape = PtShape(pt_shape_proto_str);
     TTensor a = serialization_utils::deser_tensor_from_str(serialized_a);
     auto res = convert_external_to_internal(a, pt_shape);
@@ -29,9 +29,9 @@ std::string raw_convert_external_to_internal(
 namespace plaintext {
 
 std::string raw_encode_pt(
-    std::string& context_proto_str,
-    std::string& serialized_pt) {
-    
+    const std::string& context_proto_str,
+    const std::string& serialized_pt) {
+
     context::Context context = context::Context(context_proto_str);
     TTensor pt = serialization_utils::deser_tensor_from_str(serialized_pt);
     auto res = encode_pt(context, pt);
@@ -39,9 +39,9 @@ std::string raw_encode_pt(
 }
 
 std::string raw_decode_pt(
-    std::string& context_proto_str,
-    std::string& serialized_pt) {
-    
+    const std::string& context_proto_str,
+    const std::string& serialized_pt) {
+
     context::Context context = context::Context(context_proto_str);
     TTensor pt = serialization_utils::deser_tensor_from_str(serialized_pt);
     auto res = decode_pt(context, pt);

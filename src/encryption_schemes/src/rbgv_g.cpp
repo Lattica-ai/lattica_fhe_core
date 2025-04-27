@@ -1,5 +1,6 @@
 #include "rbgv_g.h"
 #include "plaintext.h"
+#include "mod_ops.h"
 
 namespace encryption_schemes {
 
@@ -11,11 +12,10 @@ namespace encryption_schemes {
         TTensor& a,
         TTensor& e
     ) {
-        auto params = context.params;
         TTensor sk_a = t_eng::modmul(
             a, sk.unsqueeze(-2), state.q_list(), false
         );
-        TTensor e_scaled = t_eng::modmul(e, params.p(), state.q_list());
+        TTensor e_scaled = t_eng::modmul(e, context.p(), state.q_list());
         pt = plaintext::encode_pt(context, pt).unsqueeze(-1);
         return _EncryptionScheme_G::_enc(context, state, pt, sk, a, e_scaled);
     }

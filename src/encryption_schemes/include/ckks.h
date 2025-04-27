@@ -9,8 +9,8 @@ namespace encryption_schemes {
 
 class CKKS_Ciphertext : public Ciphertext {
 public:
-    std::vector<double> pt_scale;
-
+    CKKS_Ciphertext() = default;
+    CKKS_Ciphertext(const string& proto_str);
     CKKS_Ciphertext(
         TTensor& t_a, TTensor& t_b,
         pt_shape::PtShape& t_pt_shape,
@@ -18,25 +18,24 @@ public:
         std::vector<double> t_pt_scale
     );
 
-    virtual Ciphertext init_from_ct_and_state(
+    Ciphertext init_from_ct_and_state(
         CKKS_Ciphertext& ct,
         global_params_and_state::State& t_state
     );
 
-    CKKS_Ciphertext();
-
     virtual void init(lattica_proto::CKKS_Ciphertext proto);
-
     lattica_proto::CKKS_Ciphertext to_proto(optional<lattica_proto::CKKS_Ciphertext*> t_proto = nullopt);
-
-    CKKS_Ciphertext(string& proto_str);
-
     virtual Ciphertext make_copy(
         optional<TTensor> t_a = {},
         optional<TTensor> t_b = {},
         optional<pt_shape::PtShape> t_pt_shape = {},
         optional<global_params_and_state::State> t_state = {}
     );
+
+    std::vector<double>& get_pt_scale();
+
+private:
+    std::vector<double> pt_scale;
 }; // class CKKS_Ciphertext
 
 struct packPtArgs {

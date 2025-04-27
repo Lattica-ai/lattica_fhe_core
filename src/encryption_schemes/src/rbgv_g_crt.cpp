@@ -1,4 +1,5 @@
 #include "rbgv_g_crt.h"
+#include "mod_ops.h"
 
 namespace encryption_schemes {
 
@@ -18,7 +19,7 @@ TTensor _RBGV_G_CRT::_enc(
     TTensor& a,
     TTensor& e)
 {
-    TTensor e_scaled = t_eng::modmul(e, context.params.p(), state.q_list());
+    TTensor e_scaled = t_eng::modmul(e, context.p(), state.q_list());
     return _EncryptionScheme_G_CRT::_enc(context, state, pt, sk, a, e_scaled);
 }
 

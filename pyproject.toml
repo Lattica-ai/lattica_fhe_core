@@ -1,0 +1,32 @@
+[build-system]
+requires = [
+    "poetry-core>=1.0.0",
+]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "lattica-fhe-core"
+version = "0.1.2"
+description = "Lattica FHE Core Python Bindings"
+authors = [
+    "LatticaAI",
+]
+readme = "README.md"
+packages = [
+    { include = "lattica_fhe_core" },
+]
+include = [
+    { path = "lattica_fhe_core/cpp_sdk.cpython*.so", format = "wheel" },
+    { path = "lattica_fhe_core/libsodium.so.*", format = "wheel" },
+]
+exclude = [
+    "dev_scripts/**/*",
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.0.0"
+tomli = "^2.2.1"
+tomli-w = "^1.2.0"

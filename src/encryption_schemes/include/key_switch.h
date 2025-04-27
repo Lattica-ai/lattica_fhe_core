@@ -24,10 +24,10 @@ namespace key_switch {
             1 // n_axis_external
         );
         optional<std::vector<double>> t_pt_scale = nullopt;
-        if (context.is_ckks)
+        if (context.is_ckks())
             t_pt_scale = std::vector<double>(1, 1);
         auto switch_key = EncryptionScheme().init_ct(
-            context, sk_outer, sk_inner, pt_shape, context.init_state, t_pt_scale, false /* is_external */
+            context, sk_outer, sk_inner, pt_shape, context.get_state(), t_pt_scale, false /* is_external */
         );
         return static_cast<typename EncryptionScheme::CiphertextType&>(switch_key);
     }
@@ -61,8 +61,8 @@ namespace key_switch {
             sk_clone, perms_crt_base, -2
         );
         auto res = gen<EncryptionScheme>(context, sk_permutations, sk);
-        res.a = res.a.moveaxis(0, -4);
-        res.b = res.b.moveaxis(0, -4);
+        res.set_a(res.get_a().moveaxis(0, -4));
+        res.set_b(res.get_b().moveaxis(0, -4));
         return res;
     }
 
@@ -71,7 +71,7 @@ namespace key_switch {
         context::Context& context,
         TTensor& sk
     ) {
-        auto sk_sqr = t_eng::modmul(sk, sk, context.init_state.q_list(), false);
+        auto sk_sqr = t_eng::modmul(sk, sk, context.get_q_list(), false);
         auto expanded_sk = t_eng::cat({sk.unsqueeze(0), sk_sqr.unsqueeze(0)}, 0);
         return gen<EncryptionScheme>(context, expanded_sk, sk);
     }
@@ -85,7 +85,7 @@ namespace key_switch {
         typename EncryptionScheme::CiphertextType square_key;
         std::vector<lattica_proto::AuxKeyType> required_keys;
 
-        KeyAux() {}
+        KeyAux() = default;
 
         void init(typename EncryptionScheme::KeyAuxProto proto) {
             required_keys = std::vector<lattica_proto::AuxKeyType>();
@@ -140,7 +140,7 @@ namespace key_switch {
             return *proto;
         }
 
-        KeyAux(string& proto_str) : KeyAux() {
+        KeyAux(const string& proto_str) : KeyAux() {
             GOOGLE_PROTOBUF_VERIFY_VERSION;
             typename EncryptionScheme::KeyAuxProto proto;
             proto.ParseFromString(proto_str);
@@ -156,10 +156,10 @@ namespace key_switch {
             for (lattica_proto::AuxKeyType key_type : t_required_keys) {
                 switch (key_type) {
                     case lattica_proto::AuxKeyType::BASE_KEY:
-                        base_key = gen_base_key<EncryptionScheme>(context, sk, context.is_ckks);
+                        base_key = gen_base_key<EncryptionScheme>(context, sk, context.is_ckks());
                         break;
                     case lattica_proto::AuxKeyType::FULL_KEY:
-                        full_key = gen_full_key<EncryptionScheme>(context, sk, context.is_ckks);
+                        full_key = gen_full_key<EncryptionScheme>(context, sk, context.is_ckks());
                         break;
                     case lattica_proto::AuxKeyType::IDENTITY_KEY:
                         identity_key = gen<EncryptionScheme>(context, sk, sk);

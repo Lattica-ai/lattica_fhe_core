@@ -11,7 +11,7 @@ TTensor apply_crt_permutation_elementwise(
     std::vector<int64_t> new_shape(a.dim(), 1);
     new_shape[axis] = crt_perms.get_n();
     new_shape[elements_axis] = crt_perms.get_nperms();
-    TTensor new_idxs = crt_perms.new_idxs.reshape(new_shape);
+    TTensor new_idxs = crt_perms.get_new_idxs().reshape(new_shape);
     return t_eng::take_along_axis(a, new_idxs, axis);
 }
 

@@ -9,11 +9,8 @@ namespace encryption_schemes {
 
 class Ciphertext {
 public:
-    TTensor a;
-    TTensor b;
-    pt_shape::PtShape pt_shape;
-    std::optional<global_params_and_state::State> state;
-
+    Ciphertext() = default;
+    Ciphertext(const string& proto_str);
     Ciphertext(
         TTensor& t_a,
         TTensor& t_b,
@@ -21,31 +18,37 @@ public:
         global_params_and_state::State& t_state
     );
 
-    virtual Ciphertext init_from_ct_and_state(
+    Ciphertext init_from_ct_and_state(
         Ciphertext& ct,
         global_params_and_state::State& t_state
     );
 
-    Ciphertext();
-
-    virtual void init(lattica_proto::Ciphertext proto);
-
+    void init(lattica_proto::Ciphertext proto);
     lattica_proto::Ciphertext to_proto(optional<lattica_proto::Ciphertext*> t_proto = nullopt);
-
-    Ciphertext(string& proto_str);
-
     virtual Ciphertext make_copy(
         optional<TTensor> t_a = {},
         optional<TTensor> t_b = {},
         optional<pt_shape::PtShape> t_pt_shape = {},
         optional<global_params_and_state::State> t_state = {}
     );
-
     virtual Ciphertext get_item(at::ArrayRef<at::indexing::TensorIndex> indices);
-
     virtual void pack_for_transmission();
-
     virtual void unpack_from_transmission(global_params_and_state::State& t_state);
+
+    TTensor& get_a();
+    TTensor& get_b();
+    void set_a(const TTensor& t_a);
+    void set_b(const TTensor& t_b);
+    pt_shape::PtShape& get_pt_shape();
+    global_params_and_state::State& get_state();
+    bool has_state() const;
+    void set_state(const global_params_and_state::State& t_state);
+
+protected:
+    TTensor a;
+    TTensor b;
+    pt_shape::PtShape pt_shape;
+    std::optional<global_params_and_state::State> state;
 };
 
 class AbstractEncryptionScheme {

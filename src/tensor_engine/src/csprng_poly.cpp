@@ -23,31 +23,27 @@ void generate_random_int64_tensor(TTensor& tensor, int64_t q) {
     auto accessor = flattened_tensor.packed_accessor32<int64_t, 1, at::DefaultPtrTraits>();
 
     double expansion_factor = 1.1; // 10% expansion
-    size_t collected = 0;
+    auto collected = 0;
     std::vector<uint64_t> buffer(round(expansion_factor * total_elems));
 
     // Rejection sampling: max_multiple = biggest multiple of q that fits in 64 bits
     constexpr uint64_t max_random = static_cast<uint64_t>(0xFFFFFFFFFFFFFFFFULL);
-    uint64_t max_multiple = max_random - (max_random % q) - 1;
+    auto max_multiple = max_random - (max_random % q) - 1;
 
     while (collected < total_elems) {
 
         auto remaining = total_elems - collected;
-        size_t buffer_size = round(expansion_factor * remaining);
+        auto buffer_size = round(expansion_factor * remaining);
 
         randombytes_buf(buffer.data(), buffer_size * sizeof(uint64_t));
 
-        for (size_t i = 0; i < buffer_size; i++) {
-            if (buffer[i] < q) {
-                accessor[collected++] = static_cast<int64_t>(buffer[i]);
-                if (collected == total_elems)
-                    break;
-            } else {
-                if (buffer[i] < max_multiple) {
-                    accessor[collected++] = static_cast<int64_t>(buffer[i] % q);
-                    if (collected == total_elems)
-                        break;
-                } 
+        uint64_t uq = static_cast<uint64_t>(q);
+        for (auto i = 0; i < buffer_size && collected < total_elems; i++) {
+            uint64_t val = buffer[i];
+            if (val < uq) {
+                accessor[collected++] = static_cast<int64_t>(val);
+            } else if (val < max_multiple) {
+                accessor[collected++] = static_cast<int64_t>(val % uq);
             }
         }
     }

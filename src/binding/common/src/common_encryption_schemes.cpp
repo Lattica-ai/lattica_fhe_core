@@ -10,12 +10,12 @@ namespace encryption_schemes {
 
     // RBGV
     string raw__RBGV__enc(
-            string& context_proto_str,
-            string& state_proto_str,
-            string& serialized_pt,
-            string& serialized_sk,
-            string& serialized_a,
-            string& serialized_e) {
+            const string& context_proto_str,
+            const string& state_proto_str,
+            const string& serialized_pt,
+            const string& serialized_sk,
+            const string& serialized_a,
+            const string& serialized_e) {
         TTensor pt = serialization_utils::deser_tensor_from_str(serialized_pt);
         TTensor sk = serialization_utils::deser_tensor_from_str(serialized_sk);
         TTensor a = serialization_utils::deser_tensor_from_str(serialized_a);
@@ -27,9 +27,9 @@ namespace encryption_schemes {
     }
 
     std::tuple<string, string> raw__RBGV_dec_and_get_error(
-                string& context_proto_str,
-                string& serialized_sk_coefs,
-                string& ct_proto_str) {
+                const string& context_proto_str,
+                const string& serialized_sk_coefs,
+                const string& ct_proto_str) {
         TTensor sk_coefs = serialization_utils::deser_tensor_from_str(serialized_sk_coefs);
         context::Context context = context::Context(context_proto_str);
         RBGV_Ciphertext ct = RBGV_Ciphertext(ct_proto_str);
@@ -41,12 +41,12 @@ namespace encryption_schemes {
 
     // CKKS
     string raw__CKKS__enc(
-            string& context_proto_str,
-            string& state_proto_str,
-            string& serialized_pt,
-            string& serialized_sk,
-            string& serialized_a,
-            string& serialized_e) {
+            const string& context_proto_str,
+            const string& state_proto_str,
+            const string& serialized_pt,
+            const string& serialized_sk,
+            const string& serialized_a,
+            const string& serialized_e) {
         TTensor pt = serialization_utils::deser_tensor_from_str(serialized_pt);
         TTensor sk = serialization_utils::deser_tensor_from_str(serialized_sk);
         TTensor a = serialization_utils::deser_tensor_from_str(serialized_a);
@@ -58,9 +58,9 @@ namespace encryption_schemes {
     }
 
     std::tuple<string, string> raw__CKKS_dec_and_get_error(
-                string& context_proto_str,
-                string& serialized_sk_coefs,
-                string& ct_proto_str) {
+                const string& context_proto_str,
+                const string& serialized_sk_coefs,
+                const string& ct_proto_str) {
         TTensor sk_coefs = serialization_utils::deser_tensor_from_str(serialized_sk_coefs);
         context::Context context = context::Context(context_proto_str);
         CKKS_Ciphertext ct = CKKS_Ciphertext(ct_proto_str);
@@ -71,9 +71,9 @@ namespace encryption_schemes {
     }
 
     string raw__CKKS_unpack_pt(
-            string& context_proto_str,
-            string& serialized_pt_packed,
-            string& serialized_pt_scale) {
+            const string& context_proto_str,
+            const string& serialized_pt_packed,
+            const string& serialized_pt_scale) {
         TTensor pt_packed = serialization_utils::deser_tensor_from_str(serialized_pt_packed);
         context::Context context = context::Context(context_proto_str);
         lattica_proto::CKKS_Pt_Scale* proto = new lattica_proto::CKKS_Pt_Scale();
@@ -87,9 +87,9 @@ namespace encryption_schemes {
     }
 
     string raw__CKKS_pack_pt(
-            string& context_proto_str,
-            string& serialized_pt,
-            string& serialized_pt_scale) {
+            const string& context_proto_str,
+            const string& serialized_pt,
+            const string& serialized_pt_scale) {
         TTensor pt = serialization_utils::deser_tensor_from_str(serialized_pt);
         lattica_proto::CKKS_Pt_Scale* proto = new lattica_proto::CKKS_Pt_Scale();
         proto->ParseFromString(serialized_pt_scale);
@@ -104,12 +104,12 @@ namespace encryption_schemes {
 
     // CKKS_G
     string raw__CKKS_G__enc(
-            string& context_proto_str,
-            string& state_proto_str,
-            string& serialized_pt,
-            string& serialized_sk,
-            string& serialized_a,
-            string& serialized_e) {
+            const string& context_proto_str,
+            const string& state_proto_str,
+            const string& serialized_pt,
+            const string& serialized_sk,
+            const string& serialized_a,
+            const string& serialized_e) {
         TTensor pt = serialization_utils::deser_tensor_from_str(serialized_pt);
         TTensor sk = serialization_utils::deser_tensor_from_str(serialized_sk);
         TTensor a = serialization_utils::deser_tensor_from_str(serialized_a);
@@ -122,12 +122,12 @@ namespace encryption_schemes {
 
     // RBGV_G
     string raw__RBGV_G__enc(
-            string& context_proto_str,
-            string& state_proto_str,
-            string& serialized_pt,
-            string& serialized_sk,
-            string& serialized_a,
-            string& serialized_e) {
+            const string& context_proto_str,
+            const string& state_proto_str,
+            const string& serialized_pt,
+            const string& serialized_sk,
+            const string& serialized_a,
+            const string& serialized_e) {
         TTensor pt = serialization_utils::deser_tensor_from_str(serialized_pt);
         TTensor sk = serialization_utils::deser_tensor_from_str(serialized_sk);
         TTensor a = serialization_utils::deser_tensor_from_str(serialized_a);
@@ -140,12 +140,12 @@ namespace encryption_schemes {
 
     // RBGV_G_CRT
     string raw__RBGV_G_CRT__enc(
-            string& context_proto_str,
-            string& state_proto_str,
-            string& serialized_pt,
-            string& serialized_sk,
-            string& serialized_a,
-            string& serialized_e) {
+            const string& context_proto_str,
+            const string& state_proto_str,
+            const string& serialized_pt,
+            const string& serialized_sk,
+            const string& serialized_a,
+            const string& serialized_e) {
         TTensor pt = serialization_utils::deser_tensor_from_str(serialized_pt);
         TTensor sk = serialization_utils::deser_tensor_from_str(serialized_sk);
         TTensor a = serialization_utils::deser_tensor_from_str(serialized_a);
@@ -158,12 +158,12 @@ namespace encryption_schemes {
 
     // CKKS_G_CRT
     string raw__CKKS_G_CRT__enc(
-            string& context_proto_str,
-            string& state_proto_str,
-            string& serialized_pt,
-            string& serialized_sk,
-            string& serialized_a,
-            string& serialized_e) {
+            const string& context_proto_str,
+            const string& state_proto_str,
+            const string& serialized_pt,
+            const string& serialized_sk,
+            const string& serialized_a,
+            const string& serialized_e) {
         TTensor pt = serialization_utils::deser_tensor_from_str(serialized_pt);
         TTensor sk = serialization_utils::deser_tensor_from_str(serialized_sk);
         TTensor a = serialization_utils::deser_tensor_from_str(serialized_a);
@@ -179,15 +179,15 @@ namespace encryption_schemes {
 namespace key_switch {
 
     using namespace encryption_schemes;
-    
+
     string raw_gen(
-            string& context_proto_str,
-            string& serialized_sk_inner,
-            string& serialized_sk_outer) {
+            const string& context_proto_str,
+            const string& serialized_sk_inner,
+            const string& serialized_sk_outer) {
         TTensor sk_inner = serialization_utils::deser_tensor_from_str(serialized_sk_inner);
         TTensor sk_outer = serialization_utils::deser_tensor_from_str(serialized_sk_outer);
         context::Context context = context::Context(context_proto_str);
-        if (context.is_ckks) {
+        if (context.is_ckks()) {
             auto res = gen<_CKKS_G_CRT>(context, sk_inner, sk_outer);
             auto res_proto = res.to_proto();
             string res_str = res_proto.SerializeAsString();
@@ -201,12 +201,12 @@ namespace key_switch {
     }
 
     string raw_gen_full_key(
-            string& context_proto_str,
-            string& serialized_sk,
+            const string& context_proto_str,
+            const string& serialized_sk,
             bool half_sized) {
         TTensor sk = serialization_utils::deser_tensor_from_str(serialized_sk);
         context::Context context = context::Context(context_proto_str);
-        if (context.is_ckks) {
+        if (context.is_ckks()) {
             auto res = gen_full_key<_CKKS_G_CRT>(context, sk, half_sized);
             auto res_proto = res.to_proto();
             string res_str = res_proto.SerializeAsString();
@@ -220,12 +220,12 @@ namespace key_switch {
     }
 
     string raw_gen_base_key(
-            string& context_proto_str,
-            string& serialized_sk,
+            const string& context_proto_str,
+            const string& serialized_sk,
             bool half_sized) {
         TTensor sk = serialization_utils::deser_tensor_from_str(serialized_sk);
         context::Context context = context::Context(context_proto_str);
-        if (context.is_ckks) {
+        if (context.is_ckks()) {
             auto res = gen_base_key<_CKKS_G_CRT>(context, sk, half_sized);
             auto res_proto = res.to_proto();
             string res_str = res_proto.SerializeAsString();
@@ -239,11 +239,11 @@ namespace key_switch {
     }
 
     string raw_get_square_key(
-            string& context_proto_str,
-            string& serialized_sk) {
+            const string& context_proto_str,
+            const string& serialized_sk) {
         TTensor sk = serialization_utils::deser_tensor_from_str(serialized_sk);
         context::Context context = context::Context(context_proto_str);
-        if (context.is_ckks) {
+        if (context.is_ckks()) {
             auto res = get_square_key<_CKKS_G_CRT>(context, sk);
             auto res_proto = res.to_proto();
             string res_str = res_proto.SerializeAsString();
@@ -256,7 +256,7 @@ namespace key_switch {
         }
     }
 
-    string raw_create_aux_key(bool is_ckks, string& proto_str) {
+    string raw_create_aux_key(bool is_ckks, const string& proto_str) {
         if (is_ckks) {
             KeyAux res = KeyAux<_CKKS_G_CRT>(proto_str);
             std::cout << "KeyAux created" << std::endl;

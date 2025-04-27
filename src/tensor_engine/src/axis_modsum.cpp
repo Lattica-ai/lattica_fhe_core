@@ -171,7 +171,7 @@ void _axis_modsum(at::TensorIteratorBase& iter) {
               char *in_p = data[2];
               int64_t stride_a = strides[1];
               int64_t stride_p = strides[2];
-              for (const auto i : c10::irange(size)) {
+              for ([[maybe_unused]] const auto _ : c10::irange(size)) {
                  auto a = c10::load<SINGLE_PRECISION>(in_a);
                  auto p = c10::load<SINGLE_PRECISION>(in_p);
                  acc += a;

@@ -48,8 +48,6 @@ PtShape::PtShape(
     intermediate_shape = {reps_1, num_blocks, internal_n, reps_2};
 }
 
-PtShape::PtShape() {}
-
 void PtShape::init(lattica_proto::PtShape proto) {
     internal_n = proto.internal_n();
     n_axis_external = proto.n_axis_external();
@@ -78,7 +76,7 @@ lattica_proto::PtShape PtShape::to_proto(optional<lattica_proto::PtShape*> t_pro
     return *proto;
 }
 
-PtShape::PtShape(string& proto_str) : PtShape() {
+PtShape::PtShape(const string& proto_str) : PtShape() {
     GOOGLE_PROTOBUF_VERIFY_VERSION;
     lattica_proto::PtShape proto;
     proto.ParseFromString(proto_str);
@@ -104,23 +102,23 @@ void PtShape::removeKeysDim() {
 TTensor convert_internal_to_external(TTensor& a, PtShape& pt_shape) {
     a = a.moveaxis(-1 ,-2);
     a = a.flatten(-3, -2);
-    int pad = a.size(-2) - pt_shape.external_shape[pt_shape.n_axis_external];
+    int pad = a.size(-2) - pt_shape.get_external_shape()[pt_shape.get_n_axis_external()];
     if (pad > 0) {
         a = a.index({"...", Slice(None, -pad), Slice()});
     }
-    a = a.reshape(pt_shape.external_shape);
+    a = a.reshape(pt_shape.get_external_shape());
     return a;
 }
 
 TTensor convert_external_to_internal(TTensor& a, PtShape& pt_shape) {
-    int n = pt_shape.internal_n;
-    int n_idx = pt_shape.n_axis_external;
+    int n = pt_shape.get_internal_n();
+    int n_idx = pt_shape.get_n_axis_external();
     int pad = (n - a.size(n_idx)) % n;
     if (pad < 0) {
         pad += n;
     }
     a = t_eng::pad_single_axis(a, pad, -(a.dim() - n_idx));
-    a = a.reshape(pt_shape.intermediate_shape);
+    a = a.reshape(pt_shape.get_intermediate_shape());
     a = a.moveaxis(-2, -1);
     return a;
 }

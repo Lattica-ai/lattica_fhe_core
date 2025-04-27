@@ -3,8 +3,6 @@
 
 namespace crt_params_and_state {
 
-CrtState::CrtState() : mod_state(mod_params_and_state::ModState()) {}
-
 void CrtState::init(lattica_proto::CrtState proto) {
     mod_state.init(proto.mod_state());
     active_psi_arr = serialization_utils::deser_tensor(proto.active_psi_arr());
@@ -22,22 +20,32 @@ lattica_proto::CrtState CrtState::to_proto(std::optional<lattica_proto::CrtState
     return *proto;
 }
 
-CrtState::CrtState(std::string& proto_str) : CrtState() {
+CrtState::CrtState(const std::string& proto_str) : CrtState() {
     GOOGLE_PROTOBUF_VERIFY_VERSION;
     lattica_proto::CrtState proto;
     proto.ParseFromString(proto_str);
     init(proto);
 }
 
-TTensor& CrtState::q_list() { 
-    return mod_state.q_list(); 
+TTensor& CrtState::q_list() {
+    return mod_state.q_list();
 }
 
-int CrtState::len_q_list() { 
-    return mod_state.len_q_list(); 
+int CrtState::len_q_list() {
+    return mod_state.len_q_list();
 }
 
-CrtParams::CrtParams() {}
+TTensor& CrtState::get_active_psi_arr() {
+    return active_psi_arr;
+}
+
+TTensor& CrtState::get_active_psi_inv_arr() {
+    return active_psi_inv_arr;
+}
+
+TTensor& CrtState::get_active_n_inv_list() {
+    return active_n_inv_list;
+}
 
 void CrtParams::init(lattica_proto::CrtParams proto) {
     m = proto.m();
@@ -57,11 +65,19 @@ lattica_proto::CrtParams CrtParams::to_proto(std::optional<lattica_proto::CrtPar
     return *proto;
 }
 
-CrtParams::CrtParams(std::string& proto_str) : CrtParams() {
+CrtParams::CrtParams(const std::string& proto_str) : CrtParams() {
     GOOGLE_PROTOBUF_VERIFY_VERSION;
     lattica_proto::CrtParams proto;
     proto.ParseFromString(proto_str);
     init(proto);
+}
+
+int CrtParams::get_n() {
+    return n;
+}
+
+TTensor& CrtParams::get_perm() {
+    return perm;
 }
 
 }  // namespace crt_params_and_state

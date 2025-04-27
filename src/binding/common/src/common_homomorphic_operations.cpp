@@ -4,7 +4,7 @@
 
 namespace homom_ops {
 
-string raw_create_query_client_block(string& proto_str) {
+string raw_create_query_client_block(const string& proto_str) {
     QueryClientBlock res = QueryClientBlock(proto_str);
     std::cout << "QueryClientBlock created" << std::endl;
     auto res_proto = res.to_proto();
@@ -14,7 +14,7 @@ string raw_create_query_client_block(string& proto_str) {
     return res_str;
 }
 
-string raw_create_query_client_sequential_hom_op(string& proto_str) {
+string raw_create_query_client_sequential_hom_op(const string& proto_str) {
     QueryClientSequentialHomOp res = QueryClientSequentialHomOp(proto_str);
     std::cout << "QueryClientSequentialHomOp created" << std::endl;
     auto res_proto = res.to_proto();
@@ -26,9 +26,9 @@ string raw_create_query_client_sequential_hom_op(string& proto_str) {
 
 string raw_apply_clear(
     int64_t op_type_int,
-    string& serialized_context,
-    string& serialized_pt,
-    string& serialized_apply_clear_params) {
+    const string& serialized_context,
+    const string& serialized_pt,
+    const string& serialized_apply_clear_params) {
     context::Context context = context::Context(serialized_context);
     lattica_proto::TensorHolder pt_proto = lattica_proto::TensorHolder();
     pt_proto.ParseFromString(serialized_pt);

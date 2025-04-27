@@ -57,9 +57,8 @@ namespace serialization_utils {
         }
         const void* dataPtr = tensor.data_ptr();
         size_t dataSize = tensor.nbytes();
-        std::stringstream ss;
-        ss.write(reinterpret_cast<const char*>(dataPtr), dataSize);
-        proto->set_data(ss.str());
+        std::string data(static_cast<const char*>(dataPtr), dataSize);
+        proto->set_data(data);
     }
 
     TTensor deser_tensor(lattica_proto::TensorHolder proto) {
@@ -79,7 +78,7 @@ namespace serialization_utils {
         return tensor;
     }
 
-    TTensor deser_tensor_from_str(std::string& proto_str) {
+    TTensor deser_tensor_from_str(const std::string& proto_str) {
         lattica_proto::TensorHolder proto = lattica_proto::TensorHolder();
         proto.ParseFromString(proto_str);
         return deser_tensor(proto);

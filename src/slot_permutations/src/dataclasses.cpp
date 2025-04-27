@@ -15,14 +15,12 @@ lattica_proto::CrtPermutations CrtPermutations::to_proto(std::optional<lattica_p
     return *proto;
 }
 
-CrtPermutations::CrtPermutations(std::string& proto_str) : CrtPermutations() {
+CrtPermutations::CrtPermutations(const std::string& proto_str)
+    : CrtPermutations() {
     GOOGLE_PROTOBUF_VERIFY_VERSION;
     lattica_proto::CrtPermutations proto;
     proto.ParseFromString(proto_str);
     init(proto);
-}
-
-CrtPermutations::CrtPermutations() {
 }
 
 int CrtPermutations::get_n() {

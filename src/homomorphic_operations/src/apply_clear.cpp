@@ -1,8 +1,7 @@
 #include <ATen/ATen.h>
 #include "apply_clear.h"
-#include "modsum.h"
 #include "serialization_utils.h"
-#include "modmul.h"
+#include "mod_ops.h"
 #include "plaintext.h"
 #include "ckks.h"
 
@@ -14,11 +13,11 @@ TTensor const_add_clear(
     lattica_proto::ConstAddApplyClearParams apply_clear_params
 ) {
     TTensor data = serialization_utils::deser_tensor(apply_clear_params.data());
-    if (context.is_ckks) {
+    if (context.is_ckks()) {
         auto res = at::add(pt, data);
         return encryption_schemes::_CKKS().to_default_pt_tensor(res);
     } else {
-        auto p = context.params.p();
+        auto p = context.p();
         pt = plaintext::encode_pt(context, pt);
         data = plaintext::encode_pt(context, data);
         auto res = t_eng::modsum(pt, data, p);
@@ -31,11 +30,11 @@ TTensor _const_mul_clear(
     TTensor& pt,
     TTensor& data
 ) {
-    if (context.is_ckks) {
+    if (context.is_ckks()) {
         auto res = at::mul(pt, data);
         return encryption_schemes::_CKKS().to_default_pt_tensor(res);
     } else {
-        auto p = context.params.p();
+        auto p = context.p();
         pt = plaintext::encode_pt(context, pt);
         data = plaintext::encode_pt(context, data);
         auto res = t_eng::modmul(pt, data, p);
@@ -88,12 +87,12 @@ TTensor mat_mul_clear(
     data = data.unsqueeze(-1).unsqueeze(-3);
 
     TTensor res;
-    if (context.is_ckks) {
+    if (context.is_ckks()) {
         res = pt * data;
         res = encryption_schemes::_CKKS().to_default_pt_tensor(res);
         res = res.sum(-2);
     } else {
-        auto p = context.params.p();
+        auto p = context.p();
         pt = plaintext::encode_pt(context, pt);
         data = plaintext::encode_pt(context, data);
         res = t_eng::modmul(pt, data, p);
@@ -113,17 +112,19 @@ TTensor unfold_clear(
     TTensor& pt,
     lattica_proto::UnfoldApplyClearParams apply_clear_params
 ) {
-    int kernel_size = apply_clear_params.kernel_size();
-    int padding = apply_clear_params.padding();
-    int stride = apply_clear_params.stride();
+    int kernel_size_h = apply_clear_params.kernel_size(0);
+    int kernel_size_w = apply_clear_params.kernel_size(1);
+    int padding_h = apply_clear_params.padding(0);
+    int padding_w = apply_clear_params.padding(1);
+    int stride_h = apply_clear_params.stride(0);
+    int stride_w = apply_clear_params.stride(1);
 
-    // TODO: assume symmetric kernel for now
     auto unfolded = at::im2col(
         pt,
-        {kernel_size, kernel_size},
+        {kernel_size_h, kernel_size_w},
         {1, 1}, // dilation
-        {padding, padding},
-        {stride, stride}
+        {padding_h, padding_w},
+        {stride_h, stride_w}
     );
 
     return unfolded;
