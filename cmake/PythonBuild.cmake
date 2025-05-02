@@ -8,28 +8,23 @@ endif()
 
 set(PYTHON_MIN_VERSION 3.12)
 
-# Torch paths from Python virtualenv
-set(LIBTORCH_LIB_DIR "${LATTICE_TOOLKIT_DIR}/build_scripts/.venv_cpu/lib/python3.12/site-packages/torch/lib")
-set(LIBTORCH_SO_FILES
-    ${LIBTORCH_LIB_DIR}/libaoti_custom_ops.so
-    ${LIBTORCH_LIB_DIR}/libbackend_with_compiler.so
-    ${LIBTORCH_LIB_DIR}/libc10.so
-    ${LIBTORCH_LIB_DIR}/libgomp-a34b3233.so.1
-    ${LIBTORCH_LIB_DIR}/libjitbackend_test.so
-    ${LIBTORCH_LIB_DIR}/libshm.so
-    ${LIBTORCH_LIB_DIR}/libtorch.so
-    ${LIBTORCH_LIB_DIR}/libtorch_cpu.so
-    ${LIBTORCH_LIB_DIR}/libtorch_global_deps.so
-    ${LIBTORCH_LIB_DIR}/libtorch_python.so
-    ${LIBTORCH_LIB_DIR}/libtorchbind_test.so
+execute_process(
+    COMMAND python3 -c "import torch; print(torch.__path__[0])"
+    OUTPUT_VARIABLE TORCH_SITE_PACKAGES_PATH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-set(LIBTORCH_INCLUDE_DIR "${LATTICE_TOOLKIT_DIR}/build_scripts/.venv_cpu/lib/python3.12/site-packages/torch/include")
-set(LIBTORCH_INCLUDE_TORCH_DIR "${LIBTORCH_INCLUDE_DIR}/torch")
+# Set include and lib directories based on that path
+set(TORCH_INCLUDE_DIR "${TORCH_SITE_PACKAGES_PATH}/include")
+set(TORCH_LIB_DIR "${TORCH_SITE_PACKAGES_PATH}/lib")
+set(TORCH_INCLUDE_DIRS "${TORCH_INCLUDE_DIR};${TORCH_INCLUDE_DIR}/torch/csrc/api/include")
+
+message(STATUS "Resolved TORCH_INCLUDE_DIR: ${TORCH_INCLUDE_DIR}")
+message(STATUS "Resolved TORCH_LIB_DIR: ${TORCH_LIB_DIR}")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wl,--copy-dt-needed-entries -fPIC -march=native -funroll-loops -fpeel-loops -ftracer -funswitch-loops -Wno-unknown-pragmas")
 
-set(LIBSODIUM_NATIVE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../libsodium/build_python/")
+set(LIBSODIUM_NATIVE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../libsodium/build_python/")
 set(LIBSODIUM_NATIVE_INCLUDE_DIR "${LIBSODIUM_NATIVE_DIR}/include")
 set(LIBSODIUM_NATIVE_LIB_DIR "${LIBSODIUM_NATIVE_DIR}/lib")
 set(LIBSODIUM_NATIVE_LIBRARY "${LIBSODIUM_NATIVE_LIB_DIR}/libsodium.so")
@@ -59,15 +54,14 @@ pybind11_add_module(${TARGET_NAME}
 target_include_directories(${TARGET_NAME} PRIVATE
     ${Python3_INCLUDE_DIRS}
     ${LIBSODIUM_NATIVE_INCLUDE_DIR}
-    ${LIBTORCH_INCLUDE_DIR}
-    ${LIBTORCH_INCLUDE_TORCH_DIR}
+    ${TORCH_INCLUDE_DIRS}
     ${COMMON_INCLUDE_DIRS}
 )
 
 
 target_link_directories(${TARGET_NAME}
     PRIVATE
-    ${LIBTORCH_LIB_DIR}
+    ${TORCH_LIB_DIR}
     ${LIBSODIUM_NATIVE_LIB_DIR}
     "/usr/local/lib"
     "/usr/local/lib64"
@@ -109,13 +103,16 @@ set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath,${LIBSODIUM_NAT
 
 # Link everything together
 target_link_libraries(
-    ${TARGET_NAME}
-    PRIVATE
+  ${TARGET_NAME}
+  PRIVATE
     "-Wl,--start-group"
-    pybind11::module
-    ${LIBTORCH_SO_FILES}
-    ${LIBSODIUM_NATIVE_LIBRARY}
-    cpuinfo.a
-    ${protobuf_libs}
+      pybind11::module
+      torch
+      torch_cpu
+      c10          
+      ${LIBSODIUM_NATIVE_LIBRARY}
+      cpuinfo.a
+      ${protobuf_libs}
     "-Wl,--end-group"
 )
+

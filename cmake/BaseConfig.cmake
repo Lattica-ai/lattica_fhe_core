@@ -24,7 +24,7 @@ endif()
 # Gather serialization sources
 file(GLOB_RECURSE serfiles_SRC "src/serialization/src/*.pb.cc")
 
-set(LATTICE_TOOLKIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../lattice-toolkit")
+set(LATTICE_TOOLKIT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/..")
 
 set(SRC_DIR "${CMAKE_SOURCE_DIR}/src")
 set(COMMON_INCLUDE_DIRS
