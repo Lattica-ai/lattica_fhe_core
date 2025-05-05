@@ -1,7 +1,7 @@
 
 # Lattica FHE Core
 
-This repository contains the source code for the **Lattica Client FHE SDK**, which powers encrypted inference for AI workloads using Fully Homomorphic Encryption (FHE). The SDK provides an efficient, modular, and portable FHE backend that compiles into a shared library used by Python clients.
+This repository contains the source code for the **Lattica Client FHE SDK**, which powers encrypted inference for AI workloads using Fully Homomorphic Encryption (FHE). The SDK provides a portable FHE implementation that compiles into a shared library used both by the Lattica Python and JS clients.
 
 ---
 
@@ -19,7 +19,7 @@ This repository contains the source code for the **Lattica Client FHE SDK**, whi
 ### Build Steps
 
 ```bash
-git clone <this repo>
+git clone https://github.com/Lattica-ai/lattica_fhe_core.git
 cd lattica_fhe_core-main
 
 mkdir build && cd build
@@ -45,7 +45,7 @@ To replace the binary distributed by `lattica-query`:
 2. Locate the installed `.so` file by running:
 
 ```bash
-pip show -f lattica-query
+pip show -f lattica-fhe-core
 ```
 
 3. Replace the installed `cpp_sdk.*.so` file with the one you built.
